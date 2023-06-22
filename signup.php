@@ -1,13 +1,15 @@
+<?php
+
+  if(isset($_POST['submit'])){
+
+  }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
-    <title>Verbind</title>
-</head>
-<body >
+<?php  require "templates/header.php"; ?>
     <div class="login-outer-container">
         <div class="login-container">
             <img src="images/Logo.png" alt="">
@@ -16,7 +18,7 @@
                 <legend>Sign Up</legend>
                 <input placeholder="first name" type="text" name="first">
                 <input placeholder="last name" type="text" name="last">
-                <input placeholder="username" type="text" name="username" >
+                <input placeholder="email" type="email" name="email" >
                 <input placeholder="password" type="password" name="password">
                 <br>
                 <input type="submit" value="sign up">
@@ -25,5 +27,5 @@
             </form>
         </div>
     </div>
-</body>
+<?php require "templates/footer.php"  ?>
 </html>

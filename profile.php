@@ -1,13 +1,6 @@
 <?php 
-    include 'functions/fetch.php';
-    $currentPage = 'home';
-    //databese connection
-    $conn = mysqli_connect('localhost','verbind','password','verbinf');
-    if(!$conn)
-        echo "Connextion error" . mysqli_connect_error();
-    //getting posts
-     $posts = fetch($conn,"SELECT p.*, u.firstname,u.lastname from post p JOIN user u on u.id = p.userid ORDER BY time desc");
-
+    $currentPage = 'profile';
+    $me = true;
 ?>
 
 
@@ -17,6 +10,7 @@
 require "templates/header.php"; 
 require "templates/nav.php"
 ?>
+
 <section id="content">
 <div id="discover">
     <h1>People you may know:</h1>
@@ -59,46 +53,73 @@ require "templates/nav.php"
     <button onclick="window.location.replace('search.php')"><i class="fa-solid fa-search"></i> more users</button>
 </div>    
 
+
 <div id ="feed">
-    <div class="make">
-        <div id="textarea" contenteditable placeholder="write something..." spellcheck="false"></div>
-      <div class="inter">
-        <div><i class="fa-solid fa-camera"></i> Add image</div>
-        <div><i class="fa-solid fa-share"></i> Share</div>
-       </div>
+    
+    <div class="profile">
+       <div class="picture"> 
+              <img src="images/Account.png" alt="">
+              <span>first last</span>
+        </div> 
+            <span>111 <br> friends</span>
+            <span>111 <br> posts</span>
     </div>
-
-
-    <?php foreach ($posts as $post) { 
-        $id = $post["id"];
-        $likes = fetch($conn,"SELECT count(*) nbr from liked where postid = $id")[0]["nbr"];
-        $comments = fetch($conn,"SELECT count(*) nbr from comment where postid = $id")[0]["nbr"];
-        $shares = fetch($conn,"SELECT count(*) nbr from repost where postid = $id")[0]["nbr"];
-        ?>
-        <div class="f-element">
-                <div class="person">
-                    <div>
-                    <img src="images/Account.png" alt="">
-                    <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']) ?> </span>
-                    </div>
-                    <i class="fa-solid fa-ellipsis-v"></i>
-                </div>
-                <span style="margin: 2px;">
-                <?php echo htmlspecialchars($post["text"]) ?>
-                &nbsp;</span>
-                <img src="<?php echo htmlspecialchars($post["image"]) ?>" alt="">
-                <div class="inter-count">
-                    <div></i> <?php echo htmlspecialchars($likes) ?> Likes</div>
-                    <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
-                    <div></i> <?php echo htmlspecialchars($shares) ?> Shares</div>
-                </div>
-                <div class="inter">
-                    <div><i class="fa-solid fa-thumbs-up"></i> Like</div>
-                    <div><i class="fa-solid fa-comment"></i> Comment</div>
-                    <div><i class="fa-solid fa-share"></i> Share</div>
-                </div>
+    <?php
+    if ($me)
+        echo    '<div class="make">
+                <div id="textarea" contenteditable placeholder="write something..." spellcheck="false"></div>
+            <div class="inter">
+                <div><i class="fa-solid fa-camera"></i> Add image</div>
+                <div><i class="fa-solid fa-share"></i> Share</div>
             </div>
-    <?php  } ?>
+            </div>';
+    else 
+        echo '<div class="inter">
+                <div><i class="fa-solid fa-user-plus"></i> Add friend</div>
+                <div><i class="fa-solid fa-message"></i> Send message</div>
+             </div>';
+    
+    ?>
+    <div class="f-element">
+        <div class="person">
+           <div></div>
+            <i class="fa-solid fa-ellipsis-v"></i>
+        </div>
+        <span style="margin: 2px;">&nbsp;</span>
+        <img src="images/example.jpeg" alt="">
+        <div class="inter">
+            <div><i class="fa-solid fa-thumbs-up"></i> Like</div>
+            <div><i class="fa-solid fa-comment"></i> Comment</div>
+            <div><i class="fa-solid fa-share"></i> Share</div>
+        </div>
+    </div>
+    <div class="f-element">
+        <div class="person">
+            <div>
+            </div>
+            <i class="fa-solid fa-ellipsis-v"></i>
+        </div>
+        <span style="margin: 2px;"> Today is a great day </span>
+        <img src="" alt="">
+        <div class="inter">
+            <div><i class="fa-solid fa-thumbs-up"></i> Like</div>
+            <div><i class="fa-solid fa-comment"></i> Comment</div>
+            <div><i class="fa-solid fa-share"></i> Share</div>
+        </div>
+    </div>
+    <div class="f-element">
+        <div class="person">
+           <div></div>
+            <i class="fa-solid fa-ellipsis-v"></i>
+        </div>
+        <span style="margin: 2px;"> nature is awsome </span>
+        <img src="images/example2.jpg" alt="">
+        <div class="inter">
+            <div><i class="fa-solid fa-thumbs-up"></i> Like</div>
+            <div><i class="fa-solid fa-comment"></i> Comment</div>
+            <div><i class="fa-solid fa-share"></i> Share</div>
+        </div>
+    </div>
 </div>
 
 <div id="dms">
@@ -155,9 +176,3 @@ require "templates/nav.php"
 </section>
 <?php require "templates/footer.php"  ?>
 </html>
-
-
-<?php
-//closing the connexion
-mysqli_close($conn);
-?>

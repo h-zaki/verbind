@@ -1,23 +1,16 @@
+<?php 
+    $currentPage = 'messages';
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" spellcheck="false">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verbind</title>
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <header>
-         <ul>
-            <li class="page"><a class="fa-solid fa-home" href="home.php"></a></li>
-            <li class="page"><a class="fa-solid fa-search" href="search.php"></a></li>
-            <li class="page selected"><a class="fa-solid fa-comment-dots" href="messages.php"></a></li>
-            <li class="page"><a class="fa-solid fa-bell" href="notifs.php"></a></li>
-            <li class="page"><a class="fa-solid fa-user" href="profile.php"></a></li>
-         </ul>
-    </header>
+    <?php  
+    require "templates/header.php"; 
+    require "templates/nav.php"
+    ?>
 <section id="content">    
     <div id="contacts" onclick="document.getElementById('messages').style.display = 'block'" >
         <h1>Contacts:</h1>
@@ -97,5 +90,5 @@
     </div>
 </div>
 </section>
-</body>
+<?php require "templates/footer.php"  ?>
 </html>
