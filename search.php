@@ -1,5 +1,12 @@
 <?php 
     $currentPage = 'search';
+    include 'functions/fetch.php';
+    include 'config/database.php';
+
+    $userid = 21;
+
+
+    $people = fetch($conn,"SELECT * from user where id <> $userid");
 ?>
 
 
@@ -7,8 +14,8 @@
 <!DOCTYPE html>
 <html lang="en" spellcheck="false">
 <?php 
- require "templates/header.php"; 
- require "templates/nav.php"
+ require "shared/header.php"; 
+ require "shared/nav.php"
  ?>
     
     
@@ -21,42 +28,28 @@
 <input type="text" placeholder="search...">
 <i class="fa-solid fa-search"></i>
 </div> 
-    <div class="person">
+
+ <?php if(!count($people)):
+        echo "no users found";
+      else:
+ foreach ($people as $person) : ?>
+    <a class="person" href = "profile.php?id=<?php echo $person['id']?>">
         <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
+        <?php if($person['image']): ?>
+            <img src="<?php echo $person['image']?>" alt="">
+        <?php    else: ?>   
+            <img src="images/Account.png" alt="">
+        <?php    endif ?> 
+        <span><?php echo htmlspecialchars($person['firstname'])." ".htmlspecialchars($person["lastname"]) ?></span>
         </div>
-        <i> + friend request</i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i> + friend request</i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i> + friend request</i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i> + friend request</i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i> + friend request</i>
-    </div>
+        <button onclick= "event.preventDefault();"> + friend request</button>
+    </a>
+ <?php endforeach; 
+    endif ?>
 </div>    
+
+
+
 <div id="dms">
     <h1> Messages: </h1>
     <div class="dm-bar">    
@@ -109,5 +102,5 @@
     </div>
 </div>
 </section>
-<?php require "templates/footer.php"  ?>
+<?php require "shared/footer.php"  ?>
 </html>

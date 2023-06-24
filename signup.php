@@ -9,7 +9,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<?php  require "templates/header.php"; ?>
+<?php  require "shared/header.php"; ?>
     <div class="login-outer-container">
         <div class="login-container">
             <img src="images/Logo.png" alt="">
@@ -27,5 +27,5 @@
             </form>
         </div>
     </div>
-<?php require "templates/footer.php"  ?>
+<?php require "shared/footer.php"  ?>
 </html>

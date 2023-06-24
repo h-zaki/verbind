@@ -8,8 +8,8 @@
 <!DOCTYPE html>
 <html lang="en" spellcheck="false">
     <?php  
-    require "templates/header.php"; 
-    require "templates/nav.php"
+    require "shared/header.php"; 
+    require "shared/nav.php"
     ?>
 <section id="content">    
     <div id="contacts" onclick="document.getElementById('messages').style.display = 'block'" >
@@ -90,5 +90,5 @@
     </div>
 </div>
 </section>
-<?php require "templates/footer.php"  ?>
+<?php require "shared/footer.php"  ?>
 </html>

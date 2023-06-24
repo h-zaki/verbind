@@ -1,12 +1,26 @@
 <?php 
-    include 'functions/fetch.php';
     $currentPage = 'home';
-    //databese connection
-    $conn = mysqli_connect('localhost','verbind','password','verbinf');
-    if(!$conn)
-        echo "Connextion error" . mysqli_connect_error();
-    //getting posts
-     $posts = fetch($conn,"SELECT p.*, u.firstname,u.lastname from post p JOIN user u on u.id = p.userid ORDER BY time desc");
+    include 'config/database.php';
+    include 'functions/fetch.php';
+    include 'functions/friends.php';
+
+    $userid = 21;
+    
+
+    $posts = fetch($conn,"SELECT p.*, u.firstname,u.lastname,u.image pimage from post p JOIN user u on u.id = p.userid where u.id in 
+                          (SELECT u.id from user u join friend f on u.id = f.f1 where f2 = $userid union SELECT u.id from user u join friend f on u.id = f.f2 where f1 = $userid)
+                           ORDER BY time desc");
+    
+    if(isset($_POST['Like'])){
+            $postid =  $_POST['Like'];
+            save($conn,"INSERT into liked(userid,postid) VALUES ($userid,$postid)");
+            header('Location: home.php');
+      }
+    if(isset($_POST['Dislike'])){
+            $postid =  $_POST['Dislike'];
+            save($conn,"DELETE FROM liked WHERE userid = $userid and postid = $postid");
+            header('Location: home.php');
+      }
 
 ?>
 
@@ -14,50 +28,12 @@
 <!DOCTYPE html>
 <html lang="en" spellcheck="false">
 <?php  
-require "templates/header.php"; 
-require "templates/nav.php"
+require "shared/header.php"; 
+require "shared/nav.php"
 ?>
 <section id="content">
-<div id="discover">
-    <h1>People you may know:</h1>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i class="fa-solid fa-user-plus"></i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i class="fa-solid fa-user-plus"></i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i class="fa-solid fa-user-plus"></i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i class="fa-solid fa-user-plus"></i>
-    </div>
-    <div class="person">
-        <div>
-        <img src="images/Account.png" alt="">
-        <span>first last</span>
-        </div>
-        <i class="fa-solid fa-user-plus"></i>
-    </div>
 
-    <button onclick="window.location.replace('search.php')"><i class="fa-solid fa-search"></i> more users</button>
-</div>    
+<?php include 'shared/people.php' ?>
 
 <div id ="feed">
     <div class="make">
@@ -69,18 +45,20 @@ require "templates/nav.php"
     </div>
 
 
-    <?php foreach ($posts as $post) { 
+    <?php foreach ($posts as $post) : 
         $id = $post["id"];
         $likes = fetch($conn,"SELECT count(*) nbr from liked where postid = $id")[0]["nbr"];
+        $liked = fetch($conn,"SELECT userid from liked where postid = $id and userid = $userid");
         $comments = fetch($conn,"SELECT count(*) nbr from comment where postid = $id")[0]["nbr"];
         $shares = fetch($conn,"SELECT count(*) nbr from repost where postid = $id")[0]["nbr"];
         ?>
         <div class="f-element">
                 <div class="person">
-                    <div>
-                    <img src="images/Account.png" alt="">
+                  <a  href = "profile.php?id=<?php echo $post['userid']?>">  
+                    <img src="<?php if($post['pimage']) echo  $post['pimage'];
+                         else    echo"images/Account.png;" ?>" alt="">
                     <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']) ?> </span>
-                    </div>
+                    </a>
                     <i class="fa-solid fa-ellipsis-v"></i>
                 </div>
                 <span style="margin: 2px;">
@@ -92,14 +70,19 @@ require "templates/nav.php"
                     <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
                     <div></i> <?php echo htmlspecialchars($shares) ?> Shares</div>
                 </div>
-                <div class="inter">
-                    <div><i class="fa-solid fa-thumbs-up"></i> Like</div>
-                    <div><i class="fa-solid fa-comment"></i> Comment</div>
-                    <div><i class="fa-solid fa-share"></i> Share</div>
-                </div>
+                <form class="inter" method="post">
+                  <?php if (!$liked):  ?> 
+                    <button name = "Like"  value ="<?php echo htmlspecialchars($id)?>"><i class="fa-solid fa-thumbs-up"></i> Like</button>
+                  <?php else:  ?>   
+                    <button name = "Dislike"  value ="<?php echo htmlspecialchars($id)?>" class="done" ><i class="fa-solid fa-thumbs-up"></i> Liked</button>
+                  <?php endif  ?>     
+                    <button name = "comment" ><i class="fa-solid fa-comment"></i> Comment</button>
+                    <button name = "Like"  ><i class="fa-solid fa-share"></i> Share</button>
+                </form>
             </div>
-    <?php  } ?>
+    <?php  endforeach ?>
 </div>
+
 
 <div id="dms">
     <h1> Messages: </h1>
@@ -153,7 +136,11 @@ require "templates/nav.php"
     </div>
 </div>
 </section>
-<?php require "templates/footer.php"  ?>
+
+
+
+
+<?php require "shared/footer.php"  ?>
 </html>
 
 

@@ -8,4 +8,10 @@ function fetch ($conn,$query){
     return $fetched;
 }
 
+function save ($conn,$query){
+
+    $result = mysqli_query($conn,$query);
+    return $result;
+}
+
 ?>

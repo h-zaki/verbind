@@ -6,6 +6,11 @@ padding: 0;
 margin: 0;
 }
 
+a
+{
+    all: unset;
+}
+
 body
 {
     padding-top: 33px;
@@ -152,6 +157,7 @@ overflow: scroll;
 
 .inter > *
 {
+    all: unset;
     padding: 2px;
     text-align: center;
     color:var(--main);
@@ -159,9 +165,21 @@ overflow: scroll;
     cursor: pointer;
 }
 
+.inter > .done
+{
+    color: var(--online);
+    user-select: none;
+    cursor: pointer;
+}
+
 .inter :hover
 {
    color: var(--hover);
+}
+
+.inter >:active
+{
+   transform: scale(1.3)
 }
 
 
@@ -417,6 +435,7 @@ right: -2px;
     margin-bottom: 10px;
     border: 1px solid var(--main);
     border-radius: 10px;
+    cursor: pointer;
   }
   #results .person img
   {
@@ -424,7 +443,7 @@ right: -2px;
     border-radius: 10px;
   }
 
-  #results .person i
+  #results .person button
   {
     border: 2px solid var(--main);
     height: fit-content;
@@ -432,7 +451,7 @@ right: -2px;
     border-radius: 10px;
     background-color: var(--main);
     color: white;
-    margin-top: 1.5em;
+    margin-top: 2em;
   }
 
 
@@ -629,7 +648,7 @@ right: -2px;
 
 .profile
 {
-    padding: 2px;
+    padding: 10px 2px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -640,13 +659,23 @@ right: -2px;
 }
 .profile img
 {
-    width: 30%;
     border: 0.5px solid var(--main);
     border-radius: 50%;
     vertical-align: middle;
+    width: 20vw;
 }
 
 .profile .picture
 {
     text-align: left;
+}
+
+
+.profile-announce
+{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 50vh;
+   font-size:2rem
 }
