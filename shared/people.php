@@ -2,7 +2,6 @@
 
 
 <?php
-$userid = 21;
 $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
                       (SELECT u.id from user u join friend f on u.id = f.f1 where f2 = $userid union SELECT u.id from user u join friend f on u.id = f.f2 where f1 = $userid) 
                       limit 10");

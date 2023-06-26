@@ -2,7 +2,6 @@
     $currentPage = 'home';
     include 'config/database.php';
     include 'functions/fetch.php';
-    include 'functions/friends.php';
 
     $userid = 21;
     
@@ -10,7 +9,8 @@
     $posts = fetch($conn,"SELECT p.*, u.firstname,u.lastname,u.image pimage from post p JOIN user u on u.id = p.userid where u.id in 
                           (SELECT u.id from user u join friend f on u.id = f.f1 where f2 = $userid union SELECT u.id from user u join friend f on u.id = f.f2 where f1 = $userid)
                            ORDER BY time desc");
-    
+
+
     if(isset($_POST['Like'])){
             $postid =  $_POST['Like'];
             save($conn,"INSERT into liked(userid,postid) VALUES ($userid,$postid)");
@@ -33,17 +33,11 @@ require "shared/nav.php"
 ?>
 <section id="content">
 
-<?php include 'shared/people.php' ?>
+<?php include 'shared/people.php'?>
 
 <div id ="feed">
-    <div class="make">
-        <div id="textarea" contenteditable placeholder="write something..." spellcheck="false"></div>
-      <div class="inter">
-        <div><i class="fa-solid fa-camera"></i> Add image</div>
-        <div><i class="fa-solid fa-share"></i> Share</div>
-       </div>
-    </div>
 
+    <?php include 'shared/make.php'         ?>
 
     <?php foreach ($posts as $post) : 
         $id = $post["id"];
@@ -64,7 +58,7 @@ require "shared/nav.php"
                 <span style="margin: 2px;">
                 <?php echo htmlspecialchars($post["text"]) ?>
                 &nbsp;</span>
-                <img src="<?php echo htmlspecialchars($post["image"]) ?>" alt="">
+                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter-count">
                     <div></i> <?php echo htmlspecialchars($likes) ?> Likes</div>
                     <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
@@ -139,12 +133,8 @@ require "shared/nav.php"
 
 
 
-
 <?php require "shared/footer.php"  ?>
 </html>
 
 
-<?php
-//closing the connexion
-mysqli_close($conn);
-?>
+

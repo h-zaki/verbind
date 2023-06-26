@@ -155,7 +155,7 @@ overflow: scroll;
     font-size: 0.8rem;
 }
 
-.inter > *
+.inter > *,.inter input[type = submit]
 {
     all: unset;
     padding: 2px;
@@ -163,6 +163,11 @@ overflow: scroll;
     color:var(--main);
     user-select: none;
     cursor: pointer;
+}
+
+.inter input[type = submit]
+{
+    color:inherit;
 }
 
 .inter > .done
@@ -679,3 +684,34 @@ right: -2px;
    height: 50vh;
    font-size:2rem
 }
+
+
+.custom-file-input{
+    all: unset;
+    color: red;
+    width: 5rem;
+    height: 1rem;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+  .custom-file-input::before {
+    content: 'Add image';
+    color: var(--main);
+    display: inline-block;
+    outline: none;
+    white-space: nowrap;
+    user-select: none;
+  }
+  .custom-file-input:hover {
+    color: transparent;
+  }
+  .custom-file-input:hover::before {
+    color: var(--hover);
+  }
+  .custom-file-input:active {
+    color:transparent
+  }

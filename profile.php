@@ -49,13 +49,7 @@ require "shared/nav.php"
     </div>
     <?php
     if ($me)
-        echo    '<div class="make">
-                <div id="textarea" contenteditable placeholder="write something..." spellcheck="false"></div>
-            <div class="inter">
-                <div><i class="fa-solid fa-camera"></i> Add image</div>
-                <div><i class="fa-solid fa-share"></i> Share</div>
-            </div>
-            </div>';
+        include "shared/make.php";
     else 
         echo '<div class="inter">
                 <div><i class="fa-solid fa-user-plus"></i> Add friend</div>
@@ -80,7 +74,7 @@ require "shared/nav.php"
                 <span style="margin: 2px;">
                 <?php echo htmlspecialchars($post["text"]) ?>
                 &nbsp;</span>
-                <img src="<?php echo htmlspecialchars($post["image"]) ?>" alt="">
+                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter-count">
                     <div></i> <?php echo htmlspecialchars($likes) ?> Likes</div>
                     <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
@@ -153,3 +147,4 @@ require "shared/nav.php"
 </section>
 <?php require "shared/footer.php"  ?>
 </html>
+
