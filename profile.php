@@ -16,7 +16,8 @@
     $me = ($personId == $userid);
     $user = fetch($conn,"SELECT * from user where id = $personId")[0];
     $friends = friends($conn,$personId);
-    $posts = fetch($conn,"SELECT * from post where userid = $personId ORDER BY time desc");
+    $posts = fetch($conn,"SELECT * from (SELECT *,'' repost from post  
+                        union SELECT p.id,r.userid,p.text,p.image,p.time,CONCAT(x.firstname,' ',x.lastname) repost from  repost r join post p on r.postid = p.id join user x on x.id = p.userid) posts where userid = $userid  ORDER by time desc");
 
 ?>
 
@@ -65,10 +66,11 @@ require "shared/nav.php"
         $liked = fetch($conn,"SELECT userid from liked where postid = $id and userid = $userid");
         $comments = fetch($conn,"SELECT count(*) nbr from comment where postid = $id")[0]["nbr"];
         $shares = fetch($conn,"SELECT count(*) nbr from repost where postid = $id")[0]["nbr"];
+        $shared = fetch($conn,"SELECT userid from repost where postid = $id and userid = $userid");
         ?>
         <div class="f-element">
                 <div class="person">
-                    <div></div>
+                    <span> <?php if($post['repost']) echo " repost from " .$post['repost']; ?> </span>
                     <i class="fa-solid fa-ellipsis-v"></i>
                 </div>
                 <span style="margin: 2px;">
@@ -80,15 +82,13 @@ require "shared/nav.php"
                     <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
                     <div></i> <?php echo htmlspecialchars($shares) ?> Shares</div>
                 </div>
-                <form class="inter" method="post">
-                  <?php if (!$liked):  ?> 
-                    <button name = "Like"  value ="<?php echo htmlspecialchars($id)?>"><i class="fa-solid fa-thumbs-up"></i> Like</button>
-                  <?php else:  ?>   
-                    <button name = "Dislike"  value ="<?php echo htmlspecialchars($id)?>" class="done" ><i class="fa-solid fa-thumbs-up"></i> Liked</button>
-                  <?php endif  ?>     
-                    <button name = "comment" ><i class="fa-solid fa-comment"></i> Comment</button>
-                    <button name = "Like"  ><i class="fa-solid fa-share"></i> Share</button>
-                </form>
+                <div class="inter">
+                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-thumbs-up"></i> Like</button> 
+                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-comment"></i> Comment</button>
+                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-share"></i> Share</button>
+                </div>
+                <div class="comments">
+                </div>
             </div>
     <?php  endforeach ?>
 </div>
@@ -146,5 +146,6 @@ require "shared/nav.php"
 </div>
 </section>
 <?php require "shared/footer.php"  ?>
+<script src = "front-end/interactionHandler.js" defer></script>
 </html>
 

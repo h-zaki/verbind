@@ -4,9 +4,20 @@
     include 'config/database.php';
 
     $userid = 21;
-
-
-    $people = fetch($conn,"SELECT * from user where id <> $userid");
+    $searchParams = ["","",""];
+    if(isset($_GET['value']))
+    {
+        $value = mysqli_real_escape_string($conn,$_GET["value"]);
+        $values = explode(" ",$value);
+        $filler = array_fill(0,(count($values)<=3)? 3-count($values): 0, "");
+        $searchParams = array_merge($values,$filler);
+    }
+    $invalid = strlen($searchParams['2']);
+    $people = fetch($conn,"SELECT * from user where id <> $userid and 
+    (firstname like('%{$searchParams["0"]}%') and lastname like('%{$searchParams["1"]}%') or
+    firstname like('%{$searchParams["1"]}%') and lastname like('%{$searchParams["0"]}%'))
+    and not $invalid
+    ");
 ?>
 
 
@@ -24,10 +35,10 @@
 <section id="content">
   
 <div id = results>
-<div class="search-bar">
-<input type="text" placeholder="search...">
-<i class="fa-solid fa-search"></i>
-</div> 
+            <form class="search-bar" method="get">
+            <input type="text" placeholder="search..." name = "value">
+            <button type="submit"><i class="fa-solid fa-search"></i></button>
+            </form> 
 
  <?php if(!count($people)):
         echo "no users found";

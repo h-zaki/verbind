@@ -170,12 +170,14 @@ overflow: scroll;
     color:inherit;
 }
 
-.inter > .done
+.inter button[data-done]
 {
     color: var(--online);
     user-select: none;
     cursor: pointer;
+    height: fit-content;
 }
+
 
 .inter :hover
 {
