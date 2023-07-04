@@ -1,22 +1,10 @@
 
 function handlelike(event ,postid,userid)
 {
-    const element = event.target
-    const countHolder = element.parentElement.previousElementSibling.children[0];
-    var url;
-
-    if(element.hasAttribute("data-done"))
-     {
-       url = 'endpoints/Dislike.php'
-      element.removeAttribute("data-done");
-
-     }
-     else
-     {
-       url = 'endpoints/Like.php'
-      element.setAttribute("data-done","");
-     }
-
+    const element = event.currentTarget
+    const countHolder = element.children[1]
+    const set = element.hasAttribute("data-done");
+    const url = set ? 'endpoints/Dislike.php': 'endpoints/Like.php';
 
 
     // Create a new XMLHttpRequest object
@@ -37,7 +25,17 @@ function handlelike(event ,postid,userid)
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             // Request was successful, handle the response here
-             countHolder.innerHTML = JSON.parse(xhr.responseText).count + ' Likes';
+            if(set)
+            {
+              element.firstElementChild.className = "far fa-heart"
+              element.removeAttribute("data-done")
+            }
+            else
+            {
+              element.firstElementChild.className = "fas fa-heart"
+              element.setAttribute("data-done","")
+            }
+            countHolder.innerHTML = JSON.parse(xhr.responseText).count + ' Likes';
           } else {
             // There was an error, handle it here
             console.error('Request failed. Status:', xhr.status);
@@ -51,8 +49,8 @@ function handlelike(event ,postid,userid)
 
 function handleshowcomments(event ,postid,userid)
 {
-  const element = event.target
-  const commentHolder = element.parentElement.nextElementSibling;
+  const element = event.currentTarget
+  const commentHolder = element.parentElement.nextElementSibling.appendChild(document.createElement('div'));
   if(!element.hasAttribute("data-done"))
    {
     const url = `endpoints/Comment.php?id=${postid}`
@@ -71,22 +69,31 @@ function handleshowcomments(event ,postid,userid)
           var comments = JSON.parse(xhr.responseText);
           comments.forEach(comment => {
             let newCom = document.createElement('div');
-            newCom.className = 'comment';
-            newCom.innerHTML = `<span>${comment.user}: ${comment.text}<span>`
+            newCom.className = "comment-holder"
+            const profile = comment.image? comment.image :"images/Account.webp"
+            newCom.innerHTML = `<img src=${profile}><div class ="comment"><span class ="sender">${comment.user}</span> </br> <span>${comment.text}</span></div>`
             commentHolder.appendChild(newCom);
           });
             let form = document.createElement('form');
             form.method = "post"
             form.addEventListener('submit', (e)=>{handlecomment(e,postid,userid,commentHolder)})
-            form.innerHTML =  `<input type='text' name='comment' placeholder='write a comment' required> <input type='submit' value='send'>`
-            commentHolder.appendChild(form)
+            form.innerHTML =  `<input autocomplete='off' type='text' name='comment' placeholder='write a comment' required> <input type='submit' value='send'>`
+            commentHolder.parentElement.appendChild(form)
             element.setAttribute("data-done","");
+            element.firstElementChild.className = "fas fa-comment"
+            const feed = document.querySelector("#feed");
+            feed.scrollTop += commentHolder.parentElement.scrollHeight;
         } else {
           // There was an error, handle it here
           console.error('Request failed. Status:', xhr.status);
         }
       }
     }
+  }
+  else
+  {
+    commentHolder.parentElement.innerHTML=""
+    element.removeAttribute("data-done")
   }
 }
 
@@ -96,8 +103,8 @@ function handleshowcomments(event ,postid,userid)
 function handlecomment(event ,postid,userid,commentHolder)
 {
    event.preventDefault();
-   var form = event.target;
-   const countHolder = form.parentElement.previousElementSibling.previousElementSibling.children[1];
+   var form = event.currentTarget;
+   const countHolder = form.parentElement.previousElementSibling.children[1].children[1];
    var text = form.firstElementChild.value;
    var data = {
           postid,userid,text 
@@ -117,9 +124,11 @@ function handlecomment(event ,postid,userid,commentHolder)
         let response = JSON.parse(xhr.responseText)
          countHolder.innerHTML = response.count + ' Comments';
          let newCom = document.createElement('div');
-          newCom.className = 'comment';
-          newCom.innerHTML = `<span>${response.user}: ${text}<span>`
-          commentHolder.insertBefore(newCom,form);
+         const profile = response.image? response.image :"images/Account.webp"
+          newCom.className = "comment-holder"
+          newCom.innerHTML = `<img src=${profile}><div class ="comment"><span class ="sender">${response.user}</span> </br> <span>${text}</span></div>`      
+          commentHolder.appendChild(newCom);
+          commentHolder.scrollTop = commentHolder.scrollHeight;
          form.firstElementChild.value="";}
          catch(error)
          {
@@ -138,8 +147,8 @@ function handlecomment(event ,postid,userid,commentHolder)
 
 function handleshare(event ,postid,userid)
 {
-    const element = event.target
-    const countHolder = element.parentElement.previousElementSibling.children[2];
+    const element = event.currentTarget
+    const countHolder = element.children[1]
 
     if(!element.hasAttribute("data-done"))
      {

@@ -18,9 +18,9 @@ if (!empty($jsonData)) {
         $userid = $data['userid'];
         save($conn,"INSERT into comment(userid,postid,text) VALUES ($userid,$postid,'$text')");
         $nbr = fetch($conn,"SELECT count(*) nbr from comment where postid = $postid")[0]["nbr"];
-        $user = fetch($conn,"SELECT CONCAT(firstname, ' ', lastname) user from user where id = $userid")[0]["user"];
+        $user = fetch($conn,"SELECT CONCAT(firstname, ' ', lastname) user, image from user where id = $userid")[0];
         // $response = ['count' => $nbr];
-        echo json_encode(["count"=>$nbr,"user"=>$user]);
+        echo json_encode(["count"=>$nbr,"user"=>$user["user"],"image"=>$user["image"]]);
     }
   else {
     // JSON decoding failed
@@ -33,7 +33,7 @@ else {
     if(isset($_GET['id']))
     {
     $postid = $_GET['id'];
-    $comments = fetch($conn,"SELECT c.text,CONCAT(u.firstname, ' ', u.lastname) user from comment c join user u on u.id=c.userid where postid = $postid");
+    $comments = fetch($conn,"SELECT c.text,CONCAT(u.firstname, ' ', u.lastname) user,u.image image from comment c join user u on u.id=c.userid where postid = $postid");
     echo json_encode($comments);
     }
     else{

@@ -20,11 +20,10 @@
 <html lang="en" spellcheck="false">
 <?php  
 require "shared/header.php"; 
-require "shared/nav.php"
 ?>
 <section id="content">
 
-<?php include 'shared/people.php'?>
+<?php include 'shared/nav.php'?>
 
 <div id ="feed">
 
@@ -39,87 +38,42 @@ require "shared/nav.php"
         $shared = fetch($conn,"SELECT userid from repost where postid = $id and userid = $userid");
         ?>
         <div class="f-element">
-                <div class="person">
+                <div class="f-header">
                   <a  href = "profile.php?id=<?php echo $post['userid']?>">  
                     <img src="<?php if($post['pimage']) echo  $post['pimage'];
-                         else    echo"images/Account.png;" ?>" alt="">
+                         else    echo"images/Account.webp;" ?>" alt="">
                     <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']);  
                            if($post['repost']) echo " repost from " .$post['repost'];          ?> </span>
                     </a>
-                    <i class="fa-solid fa-ellipsis-v"></i>
+                    <button><i class="fa-solid fa-ellipsis-h"></i></button>
                 </div>
-                <span style="margin: 2px;">
+          
+                <div class = "f-text">
                 <?php echo htmlspecialchars($post["text"]) ?>
-                &nbsp;</span>
-                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
-                <div class="inter-count">
-                    <div></i> <?php echo htmlspecialchars($likes) ?> Likes</div>
-                    <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
-                    <div></i> <?php echo htmlspecialchars($shares) ?> Shares</div>
                 </div>
+                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter">
-                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-thumbs-up"></i> Like</button> 
-                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-comment"></i> Comment</button>
-                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-share"></i> Share</button>
+                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)">
+                                <i class="<?php if($liked) echo 'fas'; else echo 'far'?> fa-heart"></i> <span> <?php echo htmlspecialchars($likes) ?> Likes </span></button> 
+                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="far fa-comment"></i> <span>
+                                <?php echo htmlspecialchars($comments) ?>  Comments </span></button>
+                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fas fa-share"></i> 
+                                <span><?php echo htmlspecialchars($shares) ?>  Shares</span></button>
                 </div>
                 <div class="comments">
                 </div>
-            </div>
+        </div>
     <?php  endforeach ?>
 </div>
 
+<aside>
+<?php include "shared/people.php";?>
+<?php include "shared/dms.php";?>
+</aside>
 
-<div id="dms">
-    <h1> Messages: </h1>
-    <div class="dm-bar">    
-        <div class="contact" online> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact selected" online></div>
-        <div class="contact" online> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact" online> </div>
-    </div>
-    <span>first last <i style="color: #0b0;">(online)</i></span>
-    <div class="mess">
-        <div class="cont">
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo modi totam beatae commodi fuga reiciendis excepturi laborum magni impedit officia?</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-        </div>
-        <div class="text" contenteditable placeholder="Message..."></div>
-        <i class="fa-solid fa-share-from-square"></i>
-    </div>
-</div>
+<?php
+ include "shared/conversations.php"
+?>
 </section>
 
 

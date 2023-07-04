@@ -24,11 +24,18 @@ if(isset($_POST['PostShare']) && $_POST['PostText']){
 ?>
 
 <form class="make" method="post" onsubmit="submitPost(event)" enctype="multipart/form-data">
-      <div id="textarea" contenteditable placeholder="write something..." spellcheck="false"></div>
+      <h3>Post Something</h3>
+      <div class="m-text">
+        <?php if($thisuser['image']): ?>
+                    <img src="<?php echo $thisuser['image']?>" alt="">
+        <?php    else: ?>   
+                    <img src="images/Account.webp" alt="">
+        <?php    endif ?> 
+        <div id="textarea" contenteditable placeholder="What's on your mind?" spellcheck="false"></div></div>
       <input type="hidden" id="hiddenTextarea" name="PostText" />
       <img src="" alt="" id="ImageHolder" style="width: 100%;">
       <div class="inter">
-        <div><i class="fa-solid fa-camera"></i> <input type="file" name="PostImage" class ="custom-file-input"></div>
+        <div style='display:flex; align-items: center;'><i class="fa-solid fa-image"></i>&nbsp;<input type="file" name="PostImage" class ="custom-file-input"></div>
         <div><i class="fa-solid fa-share"></i> <input type="submit" value="Share" name="PostShare"> </div>
        </div>
 </form>

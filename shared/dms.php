@@ -1,56 +1,15 @@
-<?php 
-    $currentPage = 'messages';
-?>
 
 
 
 
-<!DOCTYPE html>
-<html lang="en" spellcheck="false">
-    <?php  
-    require "shared/header.php"; 
-    require "shared/nav.php"
-    ?>
-<section id="content">    
-    <div id="contacts" onclick="document.getElementById('messages').style.display = 'block'" >
-        <h1>Contacts:</h1>
-        <div class="person" online>
-            <div>
-            <img src="images/Account.webp" alt="">
+
+<div id="dms">
+    <h3>Write a message:</h3>
+    <div class="person" >
+            <a href = "profile.php?id=<?php echo $person['id']?>">  
+                <img src="images/Account.webp" alt="">
             <span>first last</span>
-            </div>
-        </div>
-        <div class="person"online>
-            <div>
-            <img src="images/Account.webp" alt="">
-            <span>first last</span>
-            </div>
-        </div>
-        <div class="person">
-            <div>
-            <img src="images/Account.webp" alt="">
-            <span>first last</span>
-            </div>
-        </div>
-        <div class="person">
-            <div>
-            <img src="images/Account.webp" alt="">
-            <span>first last</span>
-            </div>
-        </div>
-        <div class="person"online>
-            <div>
-            <img src="images/Account.webp" alt="">
-            <span>first last</span>
-            </div>
-        </div>
-    </div>  
-<div id="messages">
-    <div class="person" online>
-        <div>
-        <img src="images/Account.webp" alt="">
-        <span>first last</span>
-        </div>
+            </a>
     </div>
     <div class="mess">
         <div class="cont">
@@ -88,7 +47,4 @@
         <div class="text" contenteditable placeholder="Message..."></div>
         <i class="fa-solid fa-share-from-square"></i>
     </div>
-</div>
-</section>
-<?php require "shared/footer.php"  ?>
-</html>
+</div>    

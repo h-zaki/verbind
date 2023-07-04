@@ -11,122 +11,681 @@ a
     all: unset;
 }
 
+header
+{
+    background-color: white;
+    height: 5em;
+    box-shadow: 0 0 1px #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2em;
+}
+
+header >a, header >a img
+{
+    height: 100%;
+}
+
+header >a img
+{
+ cursor: pointer;
+}
+
+ /*search*/
+
+ .search-bar
+ {
+   position: relative;
+   width: 30vw;
+   user-select: none;
+ }
+
+ .search-bar input
+ {
+    all:unset;
+    box-shadow: 0 0 1px #111;
+    width: 100%;
+    border-radius: 5px;
+    height: 30px;
+    padding: 0 5px;
+ }
+
+ .search-bar button
+ {
+     all:unset;
+     position: absolute;
+     right: 2px;
+     top: 6px;
+     color: #555;
+     cursor: pointer;
+ }
+  .search-bar button:hover
+  {
+   color: var(--green);
+  } 
+
+  .notifs
+  {
+    all:unset;
+    border-radius: 50%;
+    box-shadow: 0 0 1px #111;
+    width: 2.5em;
+    text-align: center;
+    aspect-ratio: 1;
+    cursor: pointer;
+  }
+
+  .notifs:hover
+  {
+    background-color: var(--lightgreen);
+    box-shadow: none;
+    color: white;
+    transition: 100ms;
+  }
+
+
+  
+
+  /* nav */
+
+  nav
+  {
+    background-color: white;
+    font-size: 1.3rem;
+    flex : 1 1 17%;
+    height: 100vh;
+    text-align: left;
+    padding: 1em 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    position: relative;
+  }
+
+  nav >*
+  {
+    cursor: pointer;
+    padding: 0.5em 0.5em;
+  }
+
+  nav >*:hover
+  {
+    box-shadow: 0 0 1px #111;
+    color: var(--lightgreen);
+    border-radius: 0 10px 10px 0;
+  }
+
+  nav .myprofile
+  {
+    all: unset;  
+    margin: 0 0.5em;  
+    user-select: none;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    height: 3rem;
+    border-radius: 10px;
+    padding: 0.5em;
+    box-shadow: 0 0 1px #111;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
+  nav .myprofile:hover
+  {
+    background-color: white;
+    transform: scale(1.07);
+    transition: 100ms;
+  }
+
+  nav .myprofile img
+  {
+        height: 90%;
+        aspect-ratio: 1;
+        border-radius: 50%;
+  }
+
+  nav [selected]
+  {
+    color: var(--green);
+  }
+  
+  nav [selected]:hover
+  {
+    color: var(--green);
+    box-shadow: none;
+  }
+  nav [selected]::before
+  {
+    content: "";
+    display: block;
+    height: 1.2em;
+    width: 0.2em;
+    background-color: var(--green);
+    border-radius: 0 30% 30% 0;
+
+    position: absolute;
+    left: 0;
+  }
+
+
+  .signout
+  {
+    all:unset;
+    border-radius: 2px;
+    padding: 0.5em;
+    cursor: pointer;
+    position: absolute;
+    width: 90%;
+    bottom: 7em;
+    left: 0;
+  }
+
+  .signout:hover
+  {
+    background-color: var(--lightgreen);
+    color: white;
+    transform: scale(1.05) translate(0.2em);
+    transition: 100ms;
+  }
+
+  /* feed */
+
+  #feed
+  {
+  flex :0 1 50%;
+  height: calc(100vh - 5em);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  }
+
+  .f-element,.make
+  {
+     margin-top: 1em;
+     background-color: white;
+     border-radius: 1em;
+     padding: 1em 1em;
+  }
+  
+  .make h3, #discover h3, #convs h3,#dms h3
+  {
+     padding: 0 0 1em 1em;
+     position: relative;
+  }
+
+  .make h3::after, #discover h3::after, #convs h3::after,#dms h3::after 
+  {
+     content: "";
+     height: 1px;
+     width: calc(100% + 2em);
+     background-color: #f0f0f0;
+     position: absolute;
+     bottom: 0.3em;
+     left: -1em;
+  }
+
+  .f-header, .m-text, #discover .person, #dms .person
+{
+    padding: 0.2em 0.3em;
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.f-header :hover, #discover .person :hover, #dms .person :hover
+{
+    color: var(--green);
+}
+
+
+.f-header img, .m-text img, #discover .person img, #convs .person img, #dms .person img
+{
+    height: 2.3em;
+    border-radius: 50%;
+    vertical-align: middle;
+    aspect-ratio: 1;
+}
+
+
+.f-header :hover img, #discover .person :hover img, #dms .person :hover img
+{
+    opacity: 50%;
+}
+
+.f-header > *, #discover .person > *, #convs .person > *, #dms .person > *
+{
+    cursor: pointer;
+}
+
+.f-header > *
+{
+  text-shadow: 1px 0 0 currentColor;
+}
+
+.f-header > button
+{
+    all: unset;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: 0.3em;
+}
+
+
+.f-text
+{
+    padding: 1em 0;
+    line-height: 1.5em;
+}
+
+.f-element > img, .make > img
+  {   
+    border-radius: 3%;
+    width: 100%;
+    margin-bottom: 1em;
+  } 
+
+.f-element .comments >:first-child
+{
+  max-height: 40vh;
+  overflow-y: scroll;
+}
+
+
+.f-element .comments form
+{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 0.5em;
+}
+
+.comment-holder
+{
+    display: flex;
+    gap: 0.2em;
+    margin-top: 0.5em;
+}
+
+.comments .comment
+{
+     background-color: #f7f7f7;
+     border-radius: 1em;
+     padding: 0.5em 1em;
+     width: fit-content;
+}
+
+.comments .comment .sender
+{
+      text-shadow: 1px 0 0 currentColor;
+}
+
+.comments img
+{
+    height: 2.3em;
+    border-radius: 50%;
+    aspect-ratio: 1;
+}
+
+.f-element .comments form input[type=text]
+{
+  all: unset;
+  width: 88%;
+  padding: 5px 0 5px 5px;
+  background-color: #eee;
+  
+  border-radius: 10px;
+}
+
+.f-element .comments form input[type=submit]
+{
+  all: unset;
+  cursor: pointer;
+  width: 10%;
+  background-color: var(--green);
+  text-align: center;
+  border-radius: 10px;
+}
+
+
+/* interactions */
+
+.inter
+{
+    display: flex;
+    justify-content: space-around;
+    gap:2%;
+}
+
+.inter button[data-done]
+{
+    color: var(--green);
+    user-select: none;
+    cursor: pointer;
+    height: fit-content;
+}
+
+.inter :hover
+{
+   color: var(--green);
+}
+
+.inter >:active
+{
+   transform: scale(1.3)
+}
+
+
+
+.inter > *,.inter input[type = submit]
+{
+    all: unset;
+    padding: 2px;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.inter input[type = submit]
+{
+    color:inherit;
+}
+
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.custom-file-input::before {
+  content: 'Image';
+  display: inline-block;
+  outline: none;
+  white-space: nowrap;
+  user-select: none;
+}
+.custom-file-input:hover {
+  color: transparent;
+}
+.custom-file-input:hover::before {
+  color: var(--green);
+}
+.custom-file-input:active {
+  color:transparent
+}
+
+
+/* people */
+
+aside
+{
+  flex : 1 1 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - 6em);
+  position: relative;
+}
+
+
+#discover , #dms
+{
+  height: fit-content;
+  margin-top: 1em;
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em 1em;
+}
+
+
+#discover .person button
+{
+  all:unset;
+  cursor: pointer;
+}
+
+#discover .person i 
+{
+  color: var(--green);
+}
+
+#discover > button
+{
+  all: unset;
+  width: 100%;
+  height: 2em;
+  margin-top: 1em;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 2px;
+  box-shadow: 0 0 1px #111;
+}
+
+/* dms  */
+
+.mess .cont
+{
+    height: 25vh;
+    margin-top: 5px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.sent ,.rec
+{
+    max-width: 70%;
+    border-radius: 20px;
+    margin-top: 8px;
+    text-align: left;
+    padding: 2px 10px;
+    overflow-wrap: break-word;
+}
+
+.sent
+{
+    background-color: var(--green);
+    margin-left: auto;
+    margin-right:2px;
+}
+
+.rec
+{
+    background-color: #f0f0f0;
+    margin-left: 2px;
+    margin-right: auto;
+}
+
+
+.mess .text
+{
+    text-align: left;
+    padding: 5px 0 5px 5px;
+    background-color: #eee;
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 10px;
+    max-height: 4vh;
+    overflow-y: scroll;
+}
+
+.mess > i
+{
+    display: block;
+    text-align: right;
+    position: absolute;
+    bottom: 1.5em;
+    right: 1em;
+    color:var(--green);
+    cursor: pointer;
+}
+
+
+
+
+
+/* convs */
+
+#convs
+{
+  flex : 1 1 15%;
+  height: 100vh;
+  background-color: white;
+  padding: 1em 1em;
+}
+
+#convs .person
+{
+  cursor: pointer;
+  padding: 0.5em 0.5em;
+  width: 100%;
+  position: relative;
+}
+#convs .person[online]::after
+{
+   content: "";
+   display: block;
+   background-color: var(--green);
+   border-radius: 50%;
+   height: 0.5em;
+   width: 0.5em;
+   position: absolute;
+   bottom: 0.4em;
+   left: 2.3em;
+}
+
+#convs .person:hover
+{
+  transform: translateX(-0.8em) scale(1.1);
+  box-shadow: 0 0 1px #111;
+  background-color: white;
+  border-radius: 10px 0 0 10px;
+}
+
+/* profile */
+
+.profile
+{
+    padding: 10px 2px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    user-select: none;
+    font-size: 2rem;
+    text-align: center;
+
+    background-color: white;
+    border-radius: 1em;
+}
+.profile img
+{
+    border-radius: 50%;
+    vertical-align: middle;
+    width: 15vw;
+}
+
+.profile .picture
+{
+    text-align: left;
+}
+
+
+.profile-announce
+{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 30vh;
+   font-size:2rem
+}
+
+.profile a
+{
+  cursor: pointer;
+}
+
+.profile a:hover
+{
+  color: var(--lightgreen);
+}
+
+
+/* search */
+
+
+#people
+{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-bottom: 2em;
+  justify-content: center;  
+}
+
+#people .person
+{
+  background-color: white;
+  border-radius: 1em;
+  padding: 1em 1em;
+  cursor: pointer;
+}
+
+#people .person:hover
+{
+  transform: scale(1.1);
+  background-color: #d7d7d7;
+  transition: 200ms;
+}
+
+#people .person a
+{
+  display: flex;
+  flex-direction: column;
+  gap:1em;
+  align-items: center;
+}
+
+#people .person img
+{
+  height: 10em;
+  width: 10em;
+  border-radius: 1em;
+  flex-direction: column;
+}
+
+
+
+
+
+
+
+
+
+  /* old  */
 body
 {
-    padding-top: 33px;
+    background-color: #f7f7f7;
     font-family: 'Poiret One', cursive;
     font-weight: bold;
     overflow: hidden;
 }
 
 :root {
-    --main : #0a5;/*#ff7b00;*/
-    --hover : #0e9;
+    --main : rgb(30, 172, 101);/*#ff7b00;*/
+    --green : #0e9;
+    --lightgreen : #0fa;
     --online: rgb(0, 255, 0);
   }
 
-.page
-{ 
- text-align: center;
- padding-top: 1em;
-}
-
-.page a 
-{
-    color: rgba(0, 0, 0, 0.733);
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.page :hover
-{
-    color: white;
-}
-
-.selected a
-{
-    color: white;
-    cursor:default;
-    text-decoration: none;
-}
 
 
-nav
-{
-    padding: 0.2em 0.4em 0 0.4em;
-    background-color: var(--main);
-    user-select: none;
-    position: fixed;
-    width: 100%;
-    top:0;
-    height: 33px;
-}
-nav ul
-{
-display: flex;
-justify-content: space-around;
-list-style: none;
-width: 60%;
-position: absolute;
-left:20%;
-bottom: 1px;
-}
+
 
 #content
 {
-   margin-top: 20px; 
+   margin-top: 1px;
    display:flex;
    flex-wrap:nowrap; 
    width: 100%;
    gap: 2em;
-}
-
-#discover, #dms,#contacts
-{
-flex : 1 1 20%;
-border : 0.5px solid var(--main);
-border-radius: 10px;
-height: fit-content;
-padding-top: 2px;
-text-align: center;
-}
-
-
-#dms
-{
-    min-height: calc(100vh - 70px);
-    max-width: 20%;
-}
-
-#discover h1, #dms h1,#contacts  h1
-{
-    color: var(--main);
-    padding: 2px;
-}
-
-#discover button
-{
-    background-color: var(--main);
-    padding: 2px 10px;
-    border: none;
-    border-radius: 5px;
-    margin-bottom: 2px;
-    cursor: pointer;
-}
-
-#feed
-{
-flex :0 1 60%;
-border : 0.5px solid var(--main);
-border-radius: 10px;
-height: calc(100vh - 55px);
-overflow: scroll;
-}
-
-
-.make
-{
-    background-color: rgba(255, 255, 255, 0);
 }
 
 
@@ -144,94 +703,9 @@ overflow: scroll;
     outline: 0;
 }
 
-.inter, .inter-count
-{
-    display: flex;
-    justify-content: space-around;
-    gap:2%
-}
-
-.inter-count{
-    font-size: 0.8rem;
-}
-
-.inter > *,.inter input[type = submit]
-{
-    all: unset;
-    padding: 2px;
-    text-align: center;
-    color:var(--main);
-    user-select: none;
-    cursor: pointer;
-}
-
-.inter input[type = submit]
-{
-    color:inherit;
-}
-
-.inter button[data-done]
-{
-    color: var(--online);
-    user-select: none;
-    cursor: pointer;
-    height: fit-content;
-}
 
 
-.inter :hover
-{
-   color: var(--hover);
-}
-
-.inter >:active
-{
-   transform: scale(1.3)
-}
-
-
-.f-element
-{
-    border-top: 1px solid var(--main);
-}
-
-.f-element > img
-{   
-width: 100%;
-}
-
-.person
-{
-    padding: 2px;
-    display: flex;
-    justify-content: space-between;
-    user-select: none;
-}
-
-.person :hover
-{
-    opacity: 50%;
-}
-
-.person > *
-{
-    cursor: pointer;
-}
-
-.person >* :hover
-{
-    opacity: 100%;
-}
-
-.person img
-{
-    width: 30px;
-    border: 0.5px solid var(--main);
-    border-radius: 50%;
-    vertical-align: middle;
-}
-
-#discover img, #contacts img
+#contacts img
 {
     width: 60px;
 }
@@ -240,11 +714,6 @@ width: 100%;
 {
     margin: 5px;
     color: var(--main);
-}
-
-#discover .person i
-{
-   margin: 20px;
 }
 
 [contenteditable][placeholder]:empty:before {
@@ -267,7 +736,7 @@ width: 100%;
 
 .contact
  {
-     background-image: url("images/Account.png");
+     background-image: url("images/Account.webp");
      color: #ffffff00;
      line-height: 60px;
      position: relative;
@@ -296,7 +765,7 @@ right: -2px;
 
 #dms .selected
 {
-    outline: var(--hover) solid 2px;
+    outline: var(--green) solid 2px;
     outline-offset: -2px;
     transform: scale(1.02);
 } 
@@ -307,63 +776,6 @@ right: -2px;
 }
 
 
-.cont
-{
-    height: 70vh;
-    margin-top: 5px;
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column-reverse;
-}
-
-.sent ,.rec
-{
-    max-width: 70%;
-    border-radius: 20px;
-    margin-top: 8px;
-    color: white;
-    text-align: left;
-    padding: 0 10px;
-    overflow-wrap: break-word;
-}
-
-.sent
-{
-    background-color: var(--main);
-    margin-left: auto;
-    margin-right:2px;
-}
-
-.rec
-{
-    background-color: #888;
-    margin-left: 2px;
-    margin-right: auto;
-}
-
-
-.text
-{
-    text-align: left;
-    padding: 5px 0 5px 5px;
-    background-color: #eee;
-    width: 100%;
-    margin-top: 20px;
-    border-radius: 10px;
-    max-height: 4vh;
-    overflow-y: scroll;
-}
-
-.mess > i
-{
-    display: block;
-    text-align: right;
-    position: absolute;
-    bottom: 3.2vh;
-    right: 2px;
-    color:var(--main);
-    cursor: pointer;
-}
 
 
 
@@ -380,87 +792,8 @@ right: -2px;
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: var(--hover);
+    background: var(--green);
   }
-
-
-
-
-
-  /*search*/
-
-  .search-bar
-  {
-    margin:  5px 50px;
-    position: relative;
-    user-select: none;
-    
-  }
-
-  .search-bar input
-  {
-        border: 1px solid var(--main);
-        background-color: rgb(228, 228, 228);
-        width: 100%;
-        border-radius: 20px;
-        height: 30px;
-        padding: 0 5px;
-  }
-
-  .search-bar input:focus
-  {
-        outline: none;
-        border-color: var(--hover);
-  }
-
-  .search-bar i
-  {
-      position: absolute;
-      right: 2px;
-      top:8px;
-      color:var(--main);
-      cursor: pointer;
-  }
-   .search-bar i:hover
-   {
-    color: var(--hover);
-   } 
-
-  #results
-  {
-    flex : 1 1 80%;
-    margin : 2px 0;
-    border-radius: 10px;
-    height: fit-content;
-    padding-top: 2px;
-    text-align: center;
-    margin: 2px 1vw;
-  }
-
-  #results .person 
-  {
-    margin-bottom: 10px;
-    border: 1px solid var(--main);
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  #results .person img
-  {
-    width: 5em;
-    border-radius: 10px;
-  }
-
-  #results .person button
-  {
-    border: 2px solid var(--main);
-    height: fit-content;
-    vertical-align: middle;
-    border-radius: 10px;
-    background-color: var(--main);
-    color: white;
-    margin-top: 2em;
-  }
-
 
 
 
@@ -493,7 +826,7 @@ right: -2px;
 
   #messages .cont
   {
-          height: 83vh;
+          height: 81vh;
   }
 
   #messages i
@@ -572,11 +905,7 @@ right: -2px;
     border:none;
     }
 
-    nav ul
-    {
-        width: 100%;
-        left:0;
-    }
+    
     #contacts
     {
         border: none;
@@ -601,7 +930,7 @@ right: -2px;
 
 .login-container
 {
-    border : 2px solid var(--hover);
+    border : 2px solid var(--green);
     background: linear-gradient(to top right,rgb(163, 247, 163) , white);
     text-align: center;
     border-radius: 20px;
@@ -636,7 +965,7 @@ right: -2px;
     font-family: 'Poiret One', cursive;
     font-weight: bold;
     font-size: 1.2rem;
-    border: 1px solid var(--hover);
+    border: 1px solid var(--green);
 }
 
 .login-container input[type= submit]
@@ -653,67 +982,13 @@ right: -2px;
 }
 
 
-.profile
-{
-    padding: 10px 2px;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    user-select: none;
-    font-size: 2rem;
-    border-bottom: 1px solid var(--main);
-    text-align: center;
-}
-.profile img
-{
-    border: 0.5px solid var(--main);
-    border-radius: 50%;
-    vertical-align: middle;
-    width: 20vw;
-}
 
-.profile .picture
-{
-    text-align: left;
-}
-
-
-.profile-announce
-{
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   height: 50vh;
-   font-size:2rem
-}
 
 
 .custom-file-input{
     all: unset;
-    color: red;
     width: 5rem;
     height: 1rem;
     padding: 2px;
     cursor: pointer;
 }
-
-.custom-file-input::-webkit-file-upload-button {
-    visibility: hidden;
-  }
-  .custom-file-input::before {
-    content: 'Add image';
-    color: var(--main);
-    display: inline-block;
-    outline: none;
-    white-space: nowrap;
-    user-select: none;
-  }
-  .custom-file-input:hover {
-    color: transparent;
-  }
-  .custom-file-input:hover::before {
-    color: var(--hover);
-  }
-  .custom-file-input:active {
-    color:transparent
-  }

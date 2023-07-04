@@ -11,23 +11,24 @@ $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
 
 
 <div id="discover">
-    <h1>People you may know:</h1>
+    <h3>People you may know:</h3>
     <?php  if(!count($people)):
         echo "<br>no users found <br><br>";
       else:
-    foreach ($people as $person) : ?>
+    foreach ($people as $person) : 
+        $person = $people[0] ?>
         <div class="person" >
             <a href = "profile.php?id=<?php echo $person['id']?>">
             <?php if($person['image']): ?>
                 <img src="<?php echo $person['image']?>" alt="">
             <?php    else: ?>   
-                <img src="images/Account.png" alt="">
+                <img src="images/Account.webp" alt="">
             <?php    endif ?> 
             <span><?php echo htmlspecialchars($person['firstname'])." ".htmlspecialchars($person["lastname"]) ?></span>
             </a>
-            <i class="fa-solid fa-user-plus"></i>
+            <button> <i class="fa-solid fa-user-plus"></i> </button>
         </div>
     <?php endforeach ?>
-    <button onclick="window.location.replace('search.php')"><i class="fa-solid fa-search"></i> search users</button>
+    <button onclick="window.location.replace('search.php')"> See more</button>
     <?php endif ?>
 </div>    

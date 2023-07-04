@@ -8,7 +8,6 @@
     $userid = 21;
 
     
-    
     $personId = $userid;
     if(isset($_GET['id']))
         $personId = $_GET['id'];
@@ -17,8 +16,21 @@
     $user = fetch($conn,"SELECT * from user where id = $personId")[0];
     $friends = friends($conn,$personId);
     $posts = fetch($conn,"SELECT * from (SELECT *,'' repost from post  
-                        union SELECT p.id,r.userid,p.text,p.image,p.time,CONCAT(x.firstname,' ',x.lastname) repost from  repost r join post p on r.postid = p.id join user x on x.id = p.userid) posts where userid = $userid  ORDER by time desc");
-
+                        union SELECT p.id,r.userid,p.text,p.image,p.time,CONCAT(x.firstname,' ',x.lastname) repost from  repost r join post p on r.postid = p.id join user x on x.id = p.userid) posts where userid = $personId  ORDER by time desc");
+    
+    //$status
+    $status = "";
+    if(!$me){
+        $isfriend = fetch($conn,"SELECT * from friend where (f1 = $userid and f2 = $personId) or (f2 = $userid and f1 = $personId)"); 
+        if($isfriend)
+           $status = "friend";
+        else
+        {
+           $requested = fetch($conn,"SELECT * from friend_request where (sender = $userid and receiver = $personId) or (receiver = $userid and sender = $personId)"); 
+           
+           $status = $requested ? ($requested["sender"][0] == $userid ? "sent" : "received") : "";
+        }
+    }
 ?>
 
 
@@ -26,12 +38,13 @@
 <html lang="en" spellcheck="false">
 <?php  
 require "shared/header.php"; 
-require "shared/nav.php"
 ?>
 
 <section id="content">
+<?php 
+require "shared/nav.php"
+?>
 
-<?php include 'shared/people.php' ?>
 
 
 <div id ="feed">
@@ -41,22 +54,36 @@ require "shared/nav.php"
             <?php if($user['image']): ?>
                     <img src="<?php echo $user['image']?>" alt="">
             <?php    else: ?>   
-                    <img src="images/Account.png" alt="">
+                    <img src="images/Account.webp" alt="">
             <?php    endif ?> 
             <span><?php echo htmlspecialchars($user['firstname'])." ".htmlspecialchars($user["lastname"]) ?></span>
         </div> 
-            <span><?php echo count($friends)?> <br> friends</span>
+
+            <a href="friends.php"><?php echo count($friends)?> <br> friends</a>
             <span><?php echo count($posts)?> <br> posts</span>
     </div>
     <?php
     if ($me)
         include "shared/make.php";
-    else 
-        echo '<div class="inter">
-                <div><i class="fa-solid fa-user-plus"></i> Add friend</div>
-                <div><i class="fa-solid fa-message"></i> Send message</div>
+    else {
+        echo '<div class="inter make">';
+        switch ($status)
+        {
+            case"friend":
+                echo '<button data-done><i class="fa-solid fa-user-minus"></i> Remove friend</button>';
+                break;
+            case"sent":
+                echo '<button data-done><i class="fa-solid fa-user-minus"></i> Remove request</button>';
+                break;
+            case"received":
+                echo '<button><i class="fa-solid fa-user-check"></i> Accept request</button>';
+                break;
+            default:    
+                echo '<button><i class="fa-solid fa-user-plus"></i> Add friend</button>';
+        }
+        echo    '<div><i class="fa-solid fa-message"></i> Send message</div>
              </div>';
-    
+    }
     ?>
    <?php  if(!count($posts))
             echo "<span class='profile-announce'> this user has no posts <span>"; 
@@ -69,83 +96,49 @@ require "shared/nav.php"
         $shared = fetch($conn,"SELECT userid from repost where postid = $id and userid = $userid");
         ?>
         <div class="f-element">
-                <div class="person">
-                    <span> <?php if($post['repost']) echo " repost from " .$post['repost']; ?> </span>
-                    <i class="fa-solid fa-ellipsis-v"></i>
+        <div class="f-header">
+                  <a  href = "profile.php?id=<?php echo $post['userid']?>">  
+                  <?php if($user['image']): ?>
+                    <img src="<?php echo $user['image']?>" alt="">
+                  <?php    else: ?>   
+                    <img src="images/Account.webp" alt="">
+                  <?php    endif ?> 
+                    <span><?php echo htmlspecialchars($user['firstname'])." ".htmlspecialchars($user['lastname']);  
+                           if($post['repost']) echo " repost from " .$post['repost'];          ?> </span>
+                    </a>
+                    <button><i class="fa-solid fa-ellipsis-h"></i></button>
                 </div>
-                <span style="margin: 2px;">
+          
+                <div class = "f-text">
                 <?php echo htmlspecialchars($post["text"]) ?>
-                &nbsp;</span>
-                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
-                <div class="inter-count">
-                    <div></i> <?php echo htmlspecialchars($likes) ?> Likes</div>
-                    <div></i> <?php echo htmlspecialchars($comments) ?> Comments</div>
-                    <div></i> <?php echo htmlspecialchars($shares) ?> Shares</div>
                 </div>
+                <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter">
-                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-thumbs-up"></i> Like</button> 
-                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-comment"></i> Comment</button>
-                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fa-solid fa-share"></i> Share</button>
+                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)">
+                                <i class="<?php if($liked) echo 'fas'; else echo 'far'?> fa-heart"></i> <span> <?php echo htmlspecialchars($likes) ?> Likes </span></button> 
+                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="far fa-comment"></i> 
+                               <span> <?php echo htmlspecialchars($comments) ?> Comments </span> </button>
+                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fas fa-share"></i> 
+                                <span><?php echo htmlspecialchars($shares) ?>  Shares</span></button>
                 </div>
                 <div class="comments">
                 </div>
-            </div>
+        </div>
     <?php  endforeach ?>
 </div>
 
-<div id="dms">
-    <h1> Messages: </h1>
-    <div class="dm-bar">    
-        <div class="contact" online> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact selected" online></div>
-        <div class="contact" online> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact"> </div>
-        <div class="contact" online> </div>
-    </div>
-    <span>first last <i style="color: #0b0;">(online)</i></span>
-    <div class="mess">
-        <div class="cont">
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">:kjajz!bl majnm   jkenùalzkrjmaùzkeamzekm</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="sent">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quo modi totam beatae commodi fuga reiciendis excepturi laborum magni impedit officia?</div>
-            <div class="rec">kljsmekrktapjozjprjaipifjoajfoaizjeoaùkldn,</div>
-            <div class="rec">Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae, qui nihil! Suscipit at placeat harum quisquam eius recusandae, inventore eaque ducimus hic dolor mollitia tempora eveniet accusantium ratione magnam aut.</div>
-        </div>
-        <div class="text" contenteditable placeholder="Message..."></div>
-        <i class="fa-solid fa-share-from-square"></i>
-    </div>
-</div>
+    <aside>
+    <?php include "shared/people.php";?>
+    <?php include "shared/dms.php";?>
+    </aside>
+
+    <?php
+    include "shared/conversations.php"
+    ?>
 </section>
 <?php require "shared/footer.php"  ?>
 <script src = "front-end/interactionHandler.js" defer></script>
 </html>
+
+
 
