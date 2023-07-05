@@ -5,7 +5,7 @@
     include 'config/database.php';
 
 
-    $userid = 21;
+    $userid = 22;
 
     
     $personId = $userid;
@@ -27,8 +27,7 @@
         else
         {
            $requested = fetch($conn,"SELECT * from friend_request where (sender = $userid and receiver = $personId) or (receiver = $userid and sender = $personId)"); 
-           
-           $status = $requested ? ($requested["sender"][0] == $userid ? "sent" : "received") : "";
+           $status = count($requested) ? ($requested[0]["sender"] == $userid ? "sent" : "received") : "";
         }
     }
 ?>
@@ -70,16 +69,17 @@ require "shared/nav.php"
         switch ($status)
         {
             case"friend":
-                echo '<button data-done><i class="fa-solid fa-user-minus"></i> Remove friend</button>';
+                echo '<button data-done onclick= "handleremovefriend(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-minus"></i> Remove friend</button>';
                 break;
             case"sent":
-                echo '<button data-done><i class="fa-solid fa-user-minus"></i> Remove request</button>';
+                echo '<button data-done onclick= "handleremoverequest(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-minus"></i> Remove request</button>';
                 break;
             case"received":
-                echo '<button><i class="fa-solid fa-user-check"></i> Accept request</button>';
+                echo '<button onclick= "handleacceptfriend(event ,'.$personId.','.$userid.'); event.currentTarget.parentElement.removeChild(event.currentTarget.nextElementSibling)"><i class="fa-solid fa-user-check"></i> Accept request</button>';
+                echo '<button onclick= "handleremoverequest(event ,'.$personId.','.$userid.'); event.currentTarget.parentElement.removeChild(event.currentTarget.previousElementSibling)"><i class="fa-solid fa-user-xmark"></i> Refuse request</button>';
                 break;
             default:    
-                echo '<button><i class="fa-solid fa-user-plus"></i> Add friend</button>';
+                echo '<button onclick= "handlerequestfriend(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-plus"></i> Add friend</button>';
         }
         echo    '<div><i class="fa-solid fa-message"></i> Send message</div>
              </div>';
@@ -138,6 +138,7 @@ require "shared/nav.php"
 </section>
 <?php require "shared/footer.php"  ?>
 <script src = "front-end/interactionHandler.js" defer></script>
+<script src = "front-end/friendHandler.js" defer></script>
 </html>
 
 

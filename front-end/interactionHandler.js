@@ -14,7 +14,7 @@ function handlelike(event ,postid,userid)
     var data = {
                     postid,userid
                 }
-    xhr.open('POST', url, true)
+    xhr.open(set? 'DELETE' : 'POST', url, true)
     
     xhr.setRequestHeader('Content-type', 'application/json')
     

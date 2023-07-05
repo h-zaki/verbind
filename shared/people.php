@@ -15,8 +15,7 @@ $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
     <?php  if(!count($people)):
         echo "<br>no users found <br><br>";
       else:
-    foreach ($people as $person) : 
-        $person = $people[0] ?>
+    foreach ($people as $person): ?>
         <div class="person" >
             <a href = "profile.php?id=<?php echo $person['id']?>">
             <?php if($person['image']): ?>
