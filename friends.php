@@ -3,8 +3,9 @@
     include 'functions/fetch.php';
     include 'functions/friends.php';
     include 'config/database.php';
+    include 'shared/authsession.php';
 
-    $userid = 21;
+    
 
     $personId = $userid;
     if(isset($_GET['id']))

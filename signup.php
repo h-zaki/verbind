@@ -1,6 +1,36 @@
 <?php
+  include 'config/database.php';
+  include 'functions/fetch.php';
+  require_once 'config/firebase.php';
 
-  if(isset($_POST['submit'])){
+  $error = "";
+
+  session_start();
+
+
+  if(isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["first"]) && isset($_POST["last"])){
+
+    try {
+      
+      
+      $email =  htmlspecialchars($_POST["email"]);
+      $password = htmlspecialchars($_POST["password"]);
+      
+
+      $user = $auth->createUserWithEmailAndPassword($email, $password);
+
+      $firebaseId = htmlspecialchars($user->uid);
+      $firstname = htmlspecialchars($_POST["first"]);
+      $lastname = htmlspecialchars($_POST["last"]);
+
+      
+
+      save($conn,"INSERT into user(email , firstname, lastname, firebase_id) VALUES ('$email' , '$firstname', '$lastname','$firebaseId')");
+      header('Location: index.php');
+
+    } catch (Exception $e) {
+      $error = $e->getMessage();
+    }
 
   }
 
@@ -14,7 +44,8 @@
         <div class="login-container">
             <img src="images/Logo.png" alt="">
            
-            <form action="./home.php" method="post">
+            <form method="post">
+                <span style="color: red;"> <?php echo $error; ?> </span>
                 <legend>Sign Up</legend>
                 <input placeholder="first name" type="text" name="first">
                 <input placeholder="last name" type="text" name="last">

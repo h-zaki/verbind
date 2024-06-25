@@ -12,18 +12,18 @@ function submitPost(event) {
     event.target.submit()
   }
 
-const inputElement = document.querySelector('.custom-file-input')
-const imgholder = document.querySelector('#ImageHolder')
+  const inputElement = document.querySelector('.custom-file-input')
+  const imgholder = document.querySelector('#ImageHolder')
 
-inputElement.addEventListener('change', (event) => {
-  const file = event.target.files[0];
-  
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      imgholder.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
+  inputElement.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        imgholder.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
   
 })

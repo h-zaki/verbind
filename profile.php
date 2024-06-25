@@ -1,11 +1,12 @@
 <?php 
     $currentPage = 'profile';
     include 'functions/fetch.php';
-    include 'functions/friends.php';
+    include_once 'functions/friends.php';
     include 'config/database.php';
+    include 'shared/authsession.php';
 
 
-    $userid = 22;
+    
 
     
     $personId = $userid;
@@ -15,8 +16,8 @@
     $me = ($personId == $userid);
     $user = fetch($conn,"SELECT * from user where id = $personId")[0];
     $friends = friends($conn,$personId);
-    $posts = fetch($conn,"SELECT * from (SELECT *,'' repost from post  
-                        union SELECT p.id,r.userid,p.text,p.image,p.time,CONCAT(x.firstname,' ',x.lastname) repost from  repost r join post p on r.postid = p.id join user x on x.id = p.userid) posts where userid = $personId  ORDER by time desc");
+    $posts = fetch($conn,"SELECT * from ((SELECT p.id, r.userid, p.text, p.image, p.time, CONCAT(x.firstname, ' ', x.lastname) AS repost FROM repost r JOIN post p ON r.postid = p.id JOIN user x ON x.id = p.userid) UNION 
+                    (SELECT p.id, p.userid, p.text, p.image, p.time, '' AS repost FROM post p)) posts where userid = $personId  ORDER by time desc");
     
     //$status
     $status = "";
@@ -51,9 +52,9 @@ require "shared/nav.php"
     <div class="profile">
        <div class="picture"> 
             <?php if($user['image']): ?>
-                    <img src="<?php echo $user['image']?>" alt="">
+                    <div class= "pic-container"><img src="<?php echo $user['image']?>" alt=""></div>
             <?php    else: ?>   
-                    <img src="images/Account.webp" alt="">
+                    <div class= "pic-container"><img src="images/Account.webp" alt=""> </div>
             <?php    endif ?> 
             <span><?php echo htmlspecialchars($user['firstname'])." ".htmlspecialchars($user["lastname"]) ?></span>
         </div> 
@@ -69,19 +70,25 @@ require "shared/nav.php"
         switch ($status)
         {
             case"friend":
-                echo '<button data-done onclick= "handleremovefriend(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-minus"></i> Remove friend</button>';
+                ?> <button data-done onclick= "handleremovefriend(event ,<?php echo $userid ?>,<?php echo $personId ?>)"><i class="fa-solid fa-user-minus"></i> Remove friend</button>
+                <?php
                 break;
             case"sent":
-                echo '<button data-done onclick= "handleremoverequest(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-minus"></i> Remove request</button>';
+                ?> <button data-done onclick= "handleremoverequest(event ,<?php echo $userid ?>,<?php echo $personId ?>)"><i class="fa-solid fa-user-minus"></i> Remove request</button>
+                <?php
                 break;
             case"received":
-                echo '<button onclick= "handleacceptfriend(event ,'.$personId.','.$userid.'); event.currentTarget.parentElement.removeChild(event.currentTarget.nextElementSibling)"><i class="fa-solid fa-user-check"></i> Accept request</button>';
-                echo '<button onclick= "handleremoverequest(event ,'.$personId.','.$userid.'); event.currentTarget.parentElement.removeChild(event.currentTarget.previousElementSibling)"><i class="fa-solid fa-user-xmark"></i> Refuse request</button>';
+                ?> 
+                <button onclick= "handleacceptfriend(event ,<?php echo $personId ?>,<?php echo $userid ?>); event.currentTarget.parentElement.removeChild(event.currentTarget.nextElementSibling)"><i class="fa-solid fa-user-check"></i> Accept request</button>
+                 <button onclick= "handleremoverequest(event ,<?php echo $personId ?>,<?php echo $userid ?>); event.currentTarget.parentElement.removeChild(event.currentTarget.previousElementSibling)"><i class="fa-solid fa-user-xmark"></i> Refuse request</button>
+                 <?php
                 break;
             default:    
-                echo '<button onclick= "handlerequestfriend(event ,'.$userid.','.$personId.')"><i class="fa-solid fa-user-plus"></i> Add friend</button>';
+                ?> 
+                <button onclick= "handlerequestfriend(event ,<?php echo $userid ?>,<?php echo $personId ?> ,profileFriendRequested)"><i class="fa-solid fa-user-plus"></i> Add friend</button>
+                <?php    
         }
-        echo    '<div><i class="fa-solid fa-message"></i> Send message</div>
+        echo    '<button class ="dm-opener" ><i class="fa-solid fa-message"></i> Send message</button class ="dm-opener" >
              </div>';
     }
     ?>
@@ -110,7 +117,7 @@ require "shared/nav.php"
                 </div>
           
                 <div class = "f-text">
-                <?php echo htmlspecialchars($post["text"]) ?>
+                <?php echo $post["text"]?>
                 </div>
                 <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter">
@@ -128,12 +135,12 @@ require "shared/nav.php"
 </div>
 
     <aside>
-    <?php include "shared/people.php";?>
-    <?php include "shared/dms.php";?>
+        <?php include "shared/people.php";?>
+        <?php include "shared/dms.php";?>
     </aside>
 
     <?php
-    include "shared/conversations.php"
+        include "shared/conversations.php"
     ?>
 </section>
 <?php require "shared/footer.php"  ?>
@@ -142,4 +149,14 @@ require "shared/nav.php"
 </html>
 
 
+<script defer type="module">
+    import {loadConversation} from "./front-end/messaging.js"
 
+    const button = document.querySelector(".dm-opener")
+
+    button.addEventListener('click', (event) => {
+        loadConversation({firstname:"<?php echo $user['firstname']?>",lastname:"<?php echo $user['lastname']?>",
+            image:"<?php echo $user['image']?>"},<?php echo $personId?>)
+    });
+
+</script>

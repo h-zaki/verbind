@@ -2,8 +2,10 @@
     $currentPage = 'search';
     include 'functions/fetch.php';
     include 'config/database.php';
+    include 'shared/authsession.php';
 
-    $userid = 21;
+
+    
     $searchParams = ["","",""];
     $value = "";
     if(isset($_GET['value']))
@@ -75,7 +77,7 @@ require "shared/nav.php"
                 <div class="f-header">
                   <a  href = "profile.php?id=<?php echo $post['userid']?>">  
                     <img src="<?php if($post['pimage']) echo  $post['pimage'];
-                         else    echo"images/Account.webp;" ?>" alt="">
+                         else    echo"images/Account.webp" ?>" alt="">
                     <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']);?> </span>
                     </a>
                     <button><i class="fa-solid fa-ellipsis-h"></i></button>

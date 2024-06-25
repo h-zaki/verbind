@@ -9,6 +9,7 @@ margin: 0;
 a
 {
     all: unset;
+    cursor: pointer;
 }
 
 header
@@ -93,7 +94,8 @@ header >a img
   {
     background-color: white;
     font-size: 1.3rem;
-    flex : 1 1 17%;
+    flex : 1 1 20%;
+    max-width: 15em;
     height: 100vh;
     text-align: left;
     padding: 1em 0;
@@ -140,7 +142,7 @@ header >a img
     transition: 100ms;
   }
 
-  nav .myprofile img
+  nav .myprofile .pic-container
   {
         height: 90%;
         aspect-ratio: 1;
@@ -472,6 +474,7 @@ aside
 .mess .cont
 {
     height: 25vh;
+    width: 18vw;
     margin-top: 5px;
     overflow-y: scroll;
     display: flex;
@@ -503,32 +506,36 @@ aside
 }
 
 
-.mess .text
+.message-form
 {
-    text-align: left;
-    padding: 5px 0 5px 5px;
     background-color: #eee;
     width: 100%;
     margin-top: 20px;
     border-radius: 10px;
-    max-height: 4vh;
-    overflow-y: scroll;
+    display: flex;
+    padding-right: .2em;
 }
 
-.mess > i
+.mess .text
 {
-    display: block;
+    all: unset;
+    text-align: left;
+    padding: 5px 0 5px 5px;
+    width: 90%;
+}
+
+.mess .send
+{
+    all: unset;
     text-align: right;
-    position: absolute;
-    bottom: 1.5em;
-    right: 1em;
-    color:var(--green);
+    color: var(--online);
     cursor: pointer;
 }
 
-
-
-
+.mess .send:disabled, .mess .text:disabled
+{
+    cursor: default;
+}
 
 /* convs */
 
@@ -547,17 +554,22 @@ aside
   width: 100%;
   position: relative;
 }
-#convs .person[online]::after
+
+#convs .person.new::after
 {
-   content: "";
+   content: "new" ;
    display: block;
-   background-color: var(--green);
-   border-radius: 50%;
-   height: 0.5em;
-   width: 0.5em;
+   background-color: var(--online);
+   border-radius: 20px;
+   height: 1.5em;
+   padding-inline: 2px;
+
+   font-size: .8rem;
+   text-align: center;
+
    position: absolute;
-   bottom: 0.4em;
-   left: 2.3em;
+   right: 1em;
+   top: 1.5em;
 }
 
 #convs .person:hover
@@ -583,11 +595,23 @@ aside
     background-color: white;
     border-radius: 1em;
 }
-.profile img
+
+.profile .pic-container
+{
+  width: 15vw;
+}
+
+.pic-container
 {
     border-radius: 50%;
     vertical-align: middle;
-    width: 15vw;
+    overflow: hidden;
+    aspect-ratio: 1
+}
+
+.pic-container img
+{
+  width: 100%;
 }
 
 .profile .picture
@@ -989,7 +1013,9 @@ right: -2px;
     outline : var(--main) solid 1px
 }
 
-
+.login-container a {
+  color: blue;
+}
 
 
 

@@ -2,17 +2,16 @@
     $currentPage = 'home';
     include 'config/database.php';
     include 'functions/fetch.php';
+    include 'shared/authsession.php';
 
-    $userid = 21;
+    
 
-    $posts = fetch($conn,"SELECT * from (SELECT p.*, u.firstname,u.lastname,u.image pimage,'' repost  from post p JOIN user u on u.id = p.userid 
+    $posts = fetch($conn,"SELECT * from (SELECT p.id,p.userid,p.text,p.image,p.time, u.firstname,u.lastname,u.image pimage,'' repost  from post p JOIN user u on u.id = p.userid 
                             union SELECT p.id,r.userid,p.text,p.image,p.time, u.firstname,u.lastname,u.image pimage,CONCAT(x.firstname,' ',x.lastname) repost from repost r 
                                                JOIN post p on p.id = r.postid JOIN user u on u.id = r.userid JOIN user x on x.id = p.userid ) posts
                             where userid in 
                           (SELECT userid from user u join friend f on userid = f.f1 where f2 = $userid union SELECT userid from user u join friend f on userid = f.f2 where f1 = $userid)
                            ORDER BY time desc");
-
-
 ?>
 
 
@@ -41,7 +40,7 @@ require "shared/header.php";
                 <div class="f-header">
                   <a  href = "profile.php?id=<?php echo $post['userid']?>">  
                     <img src="<?php if($post['pimage']) echo  $post['pimage'];
-                         else    echo"images/Account.webp;" ?>" alt="">
+                         else    echo"images/Account.webp"; ?>" alt="">
                     <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']);  
                            if($post['repost']) echo " repost from " .$post['repost'];          ?> </span>
                     </a>
@@ -49,7 +48,7 @@ require "shared/header.php";
                 </div>
           
                 <div class = "f-text">
-                <?php echo htmlspecialchars($post["text"]) ?>
+                <?php echo $post["text"] ?>
                 </div>
                 <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter">

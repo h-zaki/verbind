@@ -2,9 +2,16 @@
 
 
 <?php
+include_once 'functions/friends.php';
+
+
 $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
-                      (SELECT u.id from user u join friend f on u.id = f.f1 where f2 = $userid union SELECT u.id from user u join friend f on u.id = f.f2 where f1 = $userid) 
-                      limit 10");
+                      ((SELECT f1 AS id FROM friend where f1 = $userid or f2 = $userid) 
+                      UNION (SELECT f2 AS id FROM friend where f1 = $userid or f2 = $userid) 
+                      UNION (SELECT sender AS id FROM friend_request where sender = $userid or receiver = $userid) 
+                      UNION (SELECT receiver AS id FROM friend_request where sender = $userid or receiver = $userid)
+                      )
+                      limit 4");
 ?>
 
 
@@ -25,9 +32,11 @@ $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
             <?php    endif ?> 
             <span><?php echo htmlspecialchars($person['firstname'])." ".htmlspecialchars($person["lastname"]) ?></span>
             </a>
-            <button> <i class="fa-solid fa-user-plus"></i> </button>
+            <button onclick="handlerequestfriend(event ,<?php echo $userid ?>,<?php echo $person['id'] ?> ,(element,s,r)=>{element.parentElement.parentElement.removeChild(element.parentElement)})"> <i class="fa-solid fa-user-plus"></i> </button>
         </div>
     <?php endforeach ?>
     <button onclick="window.location.replace('search.php')"> See more</button>
     <?php endif ?>
 </div>    
+
+<script src = "front-end/friendHandler.js" defer></script>

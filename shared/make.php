@@ -5,7 +5,6 @@ use Cloudinary\Api\Upload\UploadApi;
 
 $upload = new UploadApi();
 
-
 if(isset($_POST['PostShare']) && $_POST['PostText']){
     $postText =  mysqli_real_escape_string($conn,$_POST['PostText']);
     $postImage =  $_FILES["PostImage"]["tmp_name"];
