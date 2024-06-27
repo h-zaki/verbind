@@ -32,7 +32,7 @@ $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
             <?php    endif ?> 
             <span><?php echo htmlspecialchars($person['firstname'])." ".htmlspecialchars($person["lastname"]) ?></span>
             </a>
-            <button onclick="handlerequestfriend(event ,<?php echo $userid ?>,<?php echo $person['id'] ?> ,(element,s,r)=>{element.parentElement.parentElement.removeChild(element.parentElement)})"> <i class="fa-solid fa-user-plus"></i> </button>
+            <button onclick="handlerequestfriend(event ,<?php echo $userid ?>,<?php echo $person['id'] ?> ,(element,s,r)=>interact(sendrequest,[element,s,r]))"> <i class="fa-solid fa-user-plus"></i> </button>
         </div>
     <?php endforeach ?>
     <button onclick="window.location.replace('search.php')"> See more</button>
@@ -40,3 +40,21 @@ $people = fetch($conn,"SELECT * from user where id <> $userid and id not in
 </div>    
 
 <script src = "front-end/friendHandler.js" defer></script>
+<script>
+    const sendrequest = (element,s,r,callback)=>
+    {
+        element.parentElement.parentElement.removeChild(element.parentElement)
+        const notifData = {actor: myName, 	image:myImage, 	seen:false, 	target:r, 	 	type:'friend', 	typeId:s, }
+        callback({...notifData,number:1})
+    }
+</script>
+<script defer type="module">
+    import {sendNotification} from "./front-end/notifications.js"
+
+    window.interact = (func,params) =>
+    {
+        func(...params,sendNotification)
+    } 
+
+
+</script>

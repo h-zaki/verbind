@@ -36,12 +36,14 @@ function handlerequestfriend(event ,sender,receiver, callback)
 
 
 
-function profileFriendRequested(element,sender,receiver)
+function profileFriendRequested(element,sender,receiver,callback)
 {
   element.setAttribute("data-done","")
   element.innerHTML = '<i class="fa-solid fa-user-minus"></i> Remove request'
   element.removeAttribute("onclick")
   element.setAttribute("onclick",`handleremoverequest(event,${sender},${receiver})`) 
+  const notifData = {actor: myName, 	image:myImage, 	seen:false, 	target:receiver, 	 	type:'friend', 	typeId:sender, }
+  callback({...notifData,number:1})
 }
 
 
@@ -72,7 +74,7 @@ function handleremoverequest(event ,sender,receiver)
             element.removeAttribute("data-done")
             element.innerHTML = '<i class="fa-solid fa-user-plus"></i> Add friend'
             element.removeAttribute("onclick")
-            element.setAttribute("onclick",`handlerequestfriend(event,${sender},${receiver},profileFriendRequested)`) 
+            element.setAttribute("onclick",`handlerequestfriend(event,${sender},${receiver},(element,sender,receiver)=>{interact(profileFriendRequested,[element,sender,receiver] )})`) 
             console.log(xhr.response)
            } else {
             // There was an error, handle it here
@@ -127,8 +129,7 @@ function handleacceptfriend(event ,sender,receiver)
 
 function handleremovefriend(event ,sender,receiver)
 {
-  
-  const element = event.currentTarget
+  const element = event?.currentTarget
   const url = 'endpoints/Friend.php'
     // Create a new XMLHttpRequest object
     var xhr = new XMLHttpRequest()
@@ -148,10 +149,14 @@ function handleremovefriend(event ,sender,receiver)
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             // Request was successful, handle the response here
-            element.removeAttribute("data-done")
-            element.innerHTML = '<i class="fa-solid fa-user-plus"></i> Add friend'
-            element.removeAttribute("onclick")
-            element.setAttribute("onclick",`handlerequestfriend(event,${sender},${receiver},profileFriendRequested)`) 
+            if(element){
+              element.removeAttribute("data-done")
+              element.innerHTML = '<i class="fa-solid fa-user-plus"></i> Add friend'
+              element.removeAttribute("onclick")
+              element.setAttribute("onclick",`handlerequestfriend(event,${sender},${receiver},(element,sender,receiver)=>{interact(profileFriendRequested,[element,sender,receiver] )})`) 
+            }else
+              location.reload();
+            
             console.log(xhr.response)
            } else {
             // There was an error, handle it here

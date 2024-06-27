@@ -27,3 +27,39 @@ function submitPost(event) {
     }
   
 })
+
+
+function handledeletepost(id)
+{
+  const url = `endpoints/post.php?id=${id}`;
+    
+    var xhr = new XMLHttpRequest()
+
+    xhr.open('DELETE', url, true)
+    
+    xhr.send();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+              const element = document.querySelector(`#post-${id}`);
+              element.parentElement.removeChild(element)
+           } else {
+            
+              console.error('Request failed. Status:', xhr.status);
+          }
+        }
+      };
+}
+
+
+
+document.querySelectorAll("#post-info")?.forEach((button) =>{
+  button.addEventListener("click",(event)=>{
+      const target = event.target.nextElementSibling || event.target.parentElement.nextElementSibling;
+      const prev = target.getAttribute('data-shown') === 'true'
+      target.setAttribute('data-shown',!prev)
+  })
+  const options = button.nextElementSibling || button.parentElement.nextElementSibling;
+  options.addEventListener('mouseleave',(event)=>event.target.setAttribute('data-shown',false))
+}) 

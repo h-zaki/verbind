@@ -15,5 +15,29 @@
             <button type="submit"><i class="fa-solid fa-search"></i></button>
         </form> 
         <!-- <button class="person"> <img src="images/Account.webp" alt=""> </button> -->
-        <button class="notifs"> <i class="far fa-bell"></i></button>
+        <div class="notifs">
+            <button> <i class="far fa-bell"></i> </button>
+            <div class="notif-container">
+            </div>
+        </div> 
     </header>
+
+    <script>
+        const userid = <?php echo ($_SESSION["user"]? $_SESSION["user"]: "null") ?>;
+        document.querySelector(".notifs button").addEventListener("click",(event)=>{
+            const target = event.target.nextElementSibling? event.target: event.target.parentElement
+            if(!target.classList.contains("unrolled")){
+                target.classList.add("unrolled");
+                target.nextElementSibling.style.visibility = "visible"
+                target.innerHTML = 'x'
+            }else{
+                target.classList.remove("unrolled");
+                target.nextElementSibling.style.visibility = "hidden"
+                target.innerHTML = '<i class="far fa-bell"></i>'
+            }
+
+        })
+    </script>
+
+
+    <script src = "front-end/notifications.js" type="module" defer></script>

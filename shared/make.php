@@ -34,7 +34,10 @@ if(isset($_POST['PostShare']) && $_POST['PostText']){
       <input type="hidden" id="hiddenTextarea" name="PostText" />
       <img src="" alt="" id="ImageHolder" style="width: 100%;">
       <div class="inter">
-        <div style='display:flex; align-items: center;'><i class="fa-solid fa-image"></i>&nbsp;<input type="file" name="PostImage" class ="custom-file-input"></div>
+        <div style='display:flex; align-items: center;'>
+              <input id="fileInput"  type="file" accept="image/*" name="PostImage" class ="custom-file-input">
+              <label for="fileInput" class="custom-file-input-label" ><i class="fa-solid fa-image"></i>&nbsp;Image</label>
+        </div>
         <div><i class="fa-solid fa-share"></i> <input type="submit" value="Share" name="PostShare"> </div>
        </div>
 </form>

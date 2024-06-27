@@ -15,6 +15,7 @@ if (!empty($jsonData)) {
          // Return a response (e.g., as JSON)
         if( $_SERVER['REQUEST_METHOD'] ===  'POST'){
             save($conn,"INSERT into friend(f1,f2) VALUES ($f1,$f2)");
+            save($conn,"DELETE from friend_request where (sender = $f1 and receiver = $f2) or (sender = $f2 and receiver = $f1)");
             $response = ['message' => "request sent"];
         } else if ( $_SERVER['REQUEST_METHOD'] ===  'DELETE'){
             save($conn,"DELETE from friend where (f1 = $f1 and f2 = $f2) or (f2 = $f1 and f1 = $f2)");

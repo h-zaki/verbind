@@ -1,5 +1,5 @@
 
-function handlelike(event ,postid,userid)
+function handlelike(event ,postid,userid,target,callback)
 {
     const element = event.currentTarget
     const countHolder = element.children[1]
@@ -25,15 +25,21 @@ function handlelike(event ,postid,userid)
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
             // Request was successful, handle the response here
+            const nofifData = {actor: myName, 	image:myImage, 	seen:false, 	target, 	 	type:'like', 	typeId:postid, }
+
             if(set)
             {
               element.firstElementChild.className = "far fa-heart"
               element.removeAttribute("data-done")
+              if(target != userid)
+                callback({...nofifData, number:-1})
             }
             else
             {
               element.firstElementChild.className = "fas fa-heart"
               element.setAttribute("data-done","")
+              if(target != userid)
+                callback({...nofifData, number:1})
             }
             countHolder.innerHTML = JSON.parse(xhr.responseText).count + ' Likes';
           } else {
@@ -47,7 +53,7 @@ function handlelike(event ,postid,userid)
 
 
 
-function handleshowcomments(event ,postid,userid)
+function handleshowcomments(event ,postid,userid, target)
 {
   const element = event.currentTarget
   const commentHolder = element.parentElement.nextElementSibling.appendChild(document.createElement('div'));
@@ -76,7 +82,7 @@ function handleshowcomments(event ,postid,userid)
           });
             let form = document.createElement('form');
             form.method = "post"
-            form.addEventListener('submit', (e)=>{handlecomment(e,postid,userid,commentHolder)})
+            form.addEventListener('submit', (e)=>{interact(handlecomment,[e,postid,userid,commentHolder,target])})
             form.innerHTML =  `<input autocomplete='off' type='text' name='comment' placeholder='write a comment' required> <input type='submit' value='send'>`
             commentHolder.parentElement.appendChild(form)
             element.setAttribute("data-done","");
@@ -100,7 +106,7 @@ function handleshowcomments(event ,postid,userid)
 
 
 
-function handlecomment(event ,postid,userid,commentHolder)
+function handlecomment(event ,postid,userid,commentHolder,target,callback)
 {
    event.preventDefault();
    var form = event.currentTarget;
@@ -129,7 +135,13 @@ function handlecomment(event ,postid,userid,commentHolder)
           newCom.innerHTML = `<img src=${profile}><div class ="comment"><span class ="sender">${response.user}</span> </br> <span>${text}</span></div>`      
           commentHolder.appendChild(newCom);
           commentHolder.scrollTop = commentHolder.scrollHeight;
-         form.firstElementChild.value="";}
+          form.firstElementChild.value="";
+          
+          const notifData = {actor: myName, 	image:myImage, 	seen:false, 	target, 	 	type:'comment', 	typeId:postid, }
+          if(target != userid)
+            callback({...notifData,number:1})
+        
+        }
          catch(error)
          {
           console.log(xhr.responseText)
@@ -145,11 +157,10 @@ function handlecomment(event ,postid,userid,commentHolder)
 
 
 
-function handleshare(event ,postid,userid)
+function handleshare(event ,postid,userid,target,callback)
 {
     const element = event.currentTarget
     const countHolder = element.children[1]
-
     if(!element.hasAttribute("data-done"))
      {
       const url = 'endpoints/Share.php'
@@ -173,8 +184,13 @@ function handleshare(event ,postid,userid)
           if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
               // Request was successful, handle the response here
+                const notifData = {actor: myName, 	image:myImage, 	seen:false, 	target, 	 	type:'share', 	typeId:postid, }
+                
                 countHolder.innerHTML = JSON.parse(xhr.responseText).count + ' Shares';
                 element.setAttribute("data-done","");
+                if(target != userid)
+                  callback({...notifData,number:1})
+
             } else {
               // There was an error, handle it here
               console.error('Request failed. Status:', xhr.status);

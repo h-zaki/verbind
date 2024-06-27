@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, query, where,orderBy, getDocs,doc, addDoc,updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
-
+import { getFirestore, collection, onSnapshot, query, where,or, addDoc,updateDoc } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 var unsubscribe = ()=>{}
 
@@ -25,25 +24,27 @@ const db = getFirestore(app);
 // Reference to your collection
 const colRef = collection(db, 'messages');
 
-
+const querry = query(colRef, or(where('sender', '==', me),
+                                where('receiver', '==', me)))
 
 
 const subscribe = ()=>{
-    return onSnapshot(colRef, (snapshot) => {
+    
+                                
+    return onSnapshot(querry, (snapshot) => {
         snapshot.docChanges().sort((a,b)=>a.doc.data().time-b.doc.data().time).forEach(async (change) => {
         if (change.type === "added") {
             const data = change.doc.data()
-            if(data.sender == me && data.receiver == them)
+            if(data.receiver == them)
                 addMess(data.message,data.time,"sent")
-            else if(data.sender == them && data.receiver == me ){
+            else if(data.sender == them){
                 addMess(data.message,data.time,"rec")
                 if(!data.seen)
                     await updateDoc(change.doc.ref, {
                     seen: true
                     });
             }
-            if(data.receiver == me)
-                updateContacts(data.sender,data.seen)
+            updateContacts(data.sender==me ? data.receiver: data.sender ,data.seen || data.sender == me)
         }
         });
     });
@@ -121,7 +122,8 @@ const updateContacts  = (contact,seen = false) =>
                     newConv.innerHTML += `<img src="images/Account.webp" alt="">`;
                 newConv.innerHTML += `<span> ${data.firstname} ${data.lastname}</span>`;
                 convs.appendChild(newConv);
-            
+                if(them === contact)
+                    loadConversation(data,contact)
             })    
         }
 
@@ -174,10 +176,47 @@ function loadConversation(data,id)
                             <span> ${data.firstname} ${data.lastname} </span>
                             </a>`;
     display.innerHTML = "";
+    messageExit.style.display = "block";
     element.querySelectorAll("input").forEach(e=> e.removeAttribute("disabled"));
     them = id
+    saveConvInSession(id)
     subscribe()
 }
+
+function saveConvInSession(id)
+{
+ 
+    const url = `endpoints/user.php`;
+    
+    var xhr = new XMLHttpRequest()
+
+    xhr.open('POST', url, true)
+    
+    xhr.send(JSON.stringify({id}));
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status !== 200) {
+            console.error('error loading conversation:', xhr.status);
+          }
+        }
+      };
+
+}
+
+
+const messageExit = document.querySelector(".unload")
+
+messageExit.addEventListener('click', (event) => {
+    const element = display.parentElement;
+    element.parentElement.querySelector(".person").innerHTML = ""
+    display.innerHTML = "";
+    messageExit.style.display = "none";
+    element.querySelectorAll("input").forEach(e=> e.setAttribute("disabled",true));
+    them = null
+    saveConvInSession(null)
+});
+
 
 
 export {updateContacts, loadConversation};

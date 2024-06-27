@@ -38,13 +38,18 @@ require "shared/header.php";
         ?>
         <div class="f-element">
                 <div class="f-header">
-                  <a  href = "profile.php?id=<?php echo $post['userid']?>">  
-                    <img src="<?php if($post['pimage']) echo  $post['pimage'];
-                         else    echo"images/Account.webp"; ?>" alt="">
-                    <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']);  
-                           if($post['repost']) echo " repost from " .$post['repost'];          ?> </span>
+                    <a  href = "profile.php?id=<?php echo $post['userid']?>">  
+                        <img src="<?php if($post['pimage']) echo  $post['pimage'];
+                            else    echo"images/Account.webp"; ?>" alt="">
+                        <span><?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']);  
+                            if($post['repost']) echo " repost from " .$post['repost'];          ?> </span>
                     </a>
-                    <button><i class="fa-solid fa-ellipsis-h"></i></button>
+                    <button id="post-info" >
+                        <i class="fa-solid fa-ellipsis-h"></i></button>
+                    <div class = "post-opt">
+                        <button onclick="handleremovefriend(null,<?php echo $userid?>,<?php echo $post['userid']?>)" data-shown = false> 
+                            unfriend <?php echo htmlspecialchars($post['firstname'])." ".htmlspecialchars($post['lastname']) ?> </button>
+                    </div>
                 </div>
           
                 <div class = "f-text">
@@ -52,11 +57,11 @@ require "shared/header.php";
                 </div>
                 <img src="<?php if($post["image"]) echo "https://res.cloudinary.com/dg1vm1zpr/image/upload/v1687615647/".htmlspecialchars($post["image"]) ?>" alt="">
                 <div class="inter">
-                    <button  <?php if($liked) echo 'data-done'; ?> onclick="handlelike(event, <?php echo $id?>,<?php echo $userid?>)">
+                    <button  <?php if($liked) echo 'data-done'; ?> onclick="interact(handlelike,[event, <?php echo $id?>,<?php echo $userid?>,<?php echo $post['userid']?>])">
                                 <i class="<?php if($liked) echo 'fas'; else echo 'far'?> fa-heart"></i> <span> <?php echo htmlspecialchars($likes) ?> Likes </span></button> 
-                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>)"><i class="far fa-comment"></i> <span>
+                    <button onclick = "handleshowcomments(event, <?php echo $id?>,<?php echo $userid?>,<?php echo $post['userid']?>)"><i class="far fa-comment"></i> <span>
                                 <?php echo htmlspecialchars($comments) ?>  Comments </span></button>
-                    <button <?php if($shared) echo 'data-done'; ?> onclick = "handleshare(event, <?php echo $id?>,<?php echo $userid?>)"><i class="fas fa-share"></i> 
+                    <button <?php if($shared) echo 'data-done'; ?> onclick = "interact(handleshare,[event, <?php echo $id?>,<?php echo $userid?>,<?php echo $post['userid']?>])"><i class="fas fa-share"></i> 
                                 <span><?php echo htmlspecialchars($shares) ?>  Shares</span></button>
                 </div>
                 <div class="comments">
@@ -78,8 +83,11 @@ require "shared/header.php";
 
 
 <?php require "shared/footer.php"?>
-
+<script> const myName = "<?php echo $thisuser['firstname']?>",myImage = "<?php echo $thisuser['image']?>"; </script>
 <script src = "front-end/interactionHandler.js" defer></script>
+
+
+
 
 </html>
 

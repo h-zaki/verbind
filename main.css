@@ -65,8 +65,14 @@ header >a img
   {
    color: var(--green);
   } 
+  
+  .notifs 
+  {
+    position: relative;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
 
-  .notifs
+  .notifs button
   {
     all:unset;
     border-radius: 50%;
@@ -75,9 +81,34 @@ header >a img
     text-align: center;
     aspect-ratio: 1;
     cursor: pointer;
+    user-select: none;
+    position: relative;
   }
 
-  .notifs:hover
+
+  .notifs button[data-count]::after
+  {
+    content: attr(data-count);
+    position: absolute;
+    display: block;
+    border-radius: 50%;
+    background-color: var(--online);
+    top: 0;
+    right: 0;
+    height: 1em;
+    width: 1em;
+    font-size: 1rem;
+  }
+
+  .notifs button.unrolled  
+  {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+  }
+
+
+  .notifs button:hover
   {
     background-color: var(--lightgreen);
     box-shadow: none;
@@ -86,7 +117,45 @@ header >a img
   }
 
 
+  .notif-container
+  {
+    visibility: hidden;
+    z-index: 5;
+    position: absolute;
+    right: 0;
+    width: 25vw;
+    background-color: white;
+    box-shadow: 0 0 1px #111;
+    border-radius: 20px;
+    border-top-right-radius: 0;
+    padding: .5em 1em;
+  } 
+
+
+  .notif-element
+  {
+    padding-block: 1em;
+    margin-top: .5em;
+    border-radius: 10px;
+    box-shadow: 0 0 1px #c4c4c4;
+    font-weight: bold;
+    cursor: pointer;
+  }
   
+  .notif-element.unseen::after
+  {
+    content: "new";
+    color: var(--online);
+    position: absolute;
+    display: block;
+    height: 50%;
+    top: 25%;
+    right: 1em;
+    font-size: .8rem;
+  }
+
+
+
 
   /* nav */
 
@@ -228,12 +297,13 @@ header >a img
      left: -1em;
   }
 
-  .f-header, .m-text, #discover .person, #dms .person
+  .f-header, .m-text, #discover .person, #dms .person, .notif-element
 {
     padding: 0.2em 0.3em;
     display: flex;
     justify-content: space-between;
     user-select: none;
+    position: relative;
 }
 
 .f-header :hover, #discover .person :hover, #dms .person :hover
@@ -242,7 +312,7 @@ header >a img
 }
 
 
-.f-header img, .m-text img, #discover .person img, #convs .person img, #dms .person img
+.f-header img, .m-text img, #discover .person img, #convs .person img, #dms .person img, .notif-element img
 {
     height: 2.3em;
     border-radius: 50%;
@@ -302,6 +372,34 @@ header >a img
   justify-content: space-between;
   margin-top: 0.5em;
 }
+
+
+.post-opt
+{
+  position: absolute;
+  top: 0;
+  right: 0;
+  top: 2.1em;
+  border-radius: 20px;
+  background-color: #f7f7f7;
+  padding: .5em 1em;
+  font-size: .8rem;
+  visibility: hidden;
+}
+
+.post-opt[data-shown = true]
+{
+  visibility: visible;
+}
+
+
+.post-opt button
+{
+  all: unset;
+}
+
+
+
 
 .comment-holder
 {
@@ -394,15 +492,13 @@ header >a img
     color:inherit;
 }
 
-.custom-file-input::-webkit-file-upload-button {
-  visibility: hidden;
+input[type = file]
+{
+  display: none;
 }
-.custom-file-input::before {
-  content: 'Image';
-  display: inline-block;
-  outline: none;
-  white-space: nowrap;
-  user-select: none;
+.custom-file-input-label {
+  font-family: 'Poiret One', cursive;
+  cursor: pointer;
 }
 .custom-file-input:hover {
   color: transparent;
@@ -412,6 +508,25 @@ header >a img
 }
 .custom-file-input:active {
   color:transparent
+}
+
+.picture
+{
+  position: relative;
+}
+
+.picture .pic-container:hover, .picture .p-changer:hover + .pic-container
+{
+  opacity: 50%;
+  z-index: 0;
+}
+
+.picture .p-changer
+{
+  z-index: 1;
+  position: absolute;
+  top: 40%;
+  left: 40%;
 }
 
 
@@ -516,6 +631,23 @@ aside
     padding-right: .2em;
 }
 
+#dms .unload
+{
+  display: none;
+}
+
+#dms .unload::after
+{
+  content: "x";
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: green;
+  cursor: pointer;
+}
+
+
 .mess .text
 {
     all: unset;
@@ -606,7 +738,9 @@ aside
     border-radius: 50%;
     vertical-align: middle;
     overflow: hidden;
-    aspect-ratio: 1
+    aspect-ratio: 1;
+    position: relative;
+    z-index: 2;
 }
 
 .pic-container img
